@@ -1,4 +1,4 @@
-package downloader
+package com.kaiserpudding.novel2go.downloader
 
 import com.chimbori.crux.articles.Article
 import com.chimbori.crux.articles.ArticleExtractor
@@ -9,12 +9,23 @@ import java.io.InputStreamReader
 import java.net.MalformedURLException
 import java.net.URL
 
+/**
+ * Wrapper class for Crux, which handles fetching the webpage
+ *
+ */
 class CruxDownloader {
     private var html : String = ""
 
+    /**
+     * Downloads the html of the website with given url and extract the content with crux.
+     *
+     * @param url
+     * @return The extracted article.
+     * @throws MalformedURLException
+     */
+    @Throws(MalformedURLException::class, IOException::class)
     fun download(url: String) : Article {
         downloadHtml(url)
-
         return ArticleExtractor.with(url, html)
             .extractMetadata()
             .extractContent()
@@ -23,7 +34,9 @@ class CruxDownloader {
     }
 
     /**
-     *
+     * Fetches the HTML of the website with given url.
+     * Saves it into the html variable
+     * @see html
      *
      */
     @Throws(MalformedURLException::class, IOException::class)
