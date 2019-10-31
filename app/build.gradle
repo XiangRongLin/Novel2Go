@@ -15,6 +15,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -35,5 +39,5 @@ dependencies {
     //Readability parser
     implementation 'com.chimbori.crux:crux:2.2.0'
     implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:1.0.0'
+    implementation 'com.github.WirecardMobileServices:pdfbox-layout-android:1.2'
 }
