@@ -34,4 +34,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     //Readability parser
     implementation 'com.chimbori.crux:crux:2.2.0'
+    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:1.0.0'
 }
