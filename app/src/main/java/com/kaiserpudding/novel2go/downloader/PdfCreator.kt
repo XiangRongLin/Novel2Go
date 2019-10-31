@@ -7,6 +7,12 @@ import rst.pdfbox.layout.elements.Document
 import rst.pdfbox.layout.elements.Paragraph
 import java.io.FileOutputStream
 
+
+/**
+ * Creates a PDF document from the given jsoup document.
+ *
+ * @param jsoupDocument
+ */
 fun createPdf(jsoupDocument: JsoupDocument) {
     val document = Document(40f, 50f, 40f, 60f)
     val paragraphs = parseParagraphs(jsoupDocument.childNodes())
@@ -21,6 +27,12 @@ fun createPdf(jsoupDocument: JsoupDocument) {
 
 const val htmlTagRegex = "<p>|</p>"
 
+/**
+ * Converts the list of nodes to a list of strings with the content of the nodes
+ * @see htmlTagRegex
+ * @param nodes
+ * @return Return List of content of the Nodes
+ */
 fun parseParagraphs(nodes: List<Node>): List<String> {
     val paragraphs = mutableListOf<String>()
     val regex = Regex(htmlTagRegex)
