@@ -1,6 +1,8 @@
 package com.kaiserpudding.novel2go
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
@@ -13,6 +15,7 @@ import com.kaiserpudding.novel2go.downloader.CruxDownloader
 import com.kaiserpudding.novel2go.downloader.PdfCreator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 //import com.kaiserpudding.novel2go.downloader.PdfCreator
 
@@ -34,10 +37,19 @@ class MainActivity : AppCompatActivity() {
                 val article = downloader.download(url)
                 val file = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
                 file?.mkdirs()
+                val fileName = "filenName.pdf"
 
                 if (file != null) {
-                    PdfCreator.createPdf(article.document, file)
+                    PdfCreator.createPdf(article.document, file, fileName)
                 }
+
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+                intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
+                val uri = Uri.fromFile(File(file, fileName))
+                intent.putExtra(Intent.EXTRA_STREAM, uri)
+                intent.setType("message/rfc/822")
+                startActivity(Intent.createChooser(intent, "send mail"))
             }
         }
     }

@@ -22,7 +22,7 @@ import org.jsoup.nodes.Document as JsoupDocument
 class PdfCreator {
 
     companion object {
-        fun createPdf(jsoupDocument: JsoupDocument, filesDir: File) {
+        fun createPdf(jsoupDocument: JsoupDocument, filesDir: File, fileName: String) {
             val document = PdfDocument()
             val width = 210
             val pageInfo = PdfDocument.PageInfo.Builder( width, 800, 1).create()
@@ -52,7 +52,7 @@ class PdfCreator {
 //            }
 //            val filePath = File("$path/myfile.pdf")
             Log.d("write_file", "written to $filesDir")
-            document.writeTo(FileOutputStream("$filesDir/formatted.pdf"))
+            document.writeTo(FileOutputStream("$filesDir/$fileName"))
             document.close()
         }
 
