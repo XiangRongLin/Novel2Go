@@ -4,11 +4,16 @@ package com.kaiserpudding.novel2go.downloader
 //import de.wirecard.pdfbox.layout.elements.Paragraph
 //import org.apache.pdfbox.pdmodel.font.PDType1Font
 //import org.jsoup.nodes.Node
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import android.os.Build
 import android.os.Environment
+import android.text.*
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.graphics.withTranslation
 import org.jsoup.nodes.Node
 import java.io.File
 import java.io.FileOutputStream
@@ -19,20 +24,24 @@ class PdfCreator {
     companion object {
         fun createPdf(jsoupDocument: JsoupDocument, filesDir: File) {
             val document = PdfDocument()
-            val pageInfo = PdfDocument.PageInfo.Builder( 210, 2970, 1).create()
+            val width = 210
+            val pageInfo = PdfDocument.PageInfo.Builder( width, 800, 1).create()
             val page = document.startPage(pageInfo)
             val canvas = page.canvas
-            val paint = Paint()
+            val paint = TextPaint()
+            paint.isAntiAlias = true
             paint.color = Color.BLACK
             paint.textSize = 5f
             paint.isLinearText = true
 
             val paragraphs = parseParagraphs(jsoupDocument.childNodes())
 
-            var multiplier = 1
+            val alignmen = Layout.Alignment.ALIGN_NORMAL
+
+            var height = 0
             for (paragraph : String in paragraphs) {
-                canvas.drawText(paragraph, 20f, 20f + 5f * multiplier, paint)
-                multiplier++
+                height += canvas.drawMultilineText(paragraph, paint, width - 20, 10f, 20f + height) + 5
+//                canvas.drawText(paragraph, 20f, 20f + 5f * multiplier, paint)
             }
             document.finishPage(page)
 
@@ -43,11 +52,11 @@ class PdfCreator {
 //            }
 //            val filePath = File("$path/myfile.pdf")
             Log.d("write_file", "written to $filesDir")
-            document.writeTo(FileOutputStream("$filesDir/myfile.pdf"))
+            document.writeTo(FileOutputStream("$filesDir/formatted.pdf"))
             document.close()
         }
 
-        const val htmlTagRegex = "<p>|</p>"
+        const val htmlTagRegex = "<p>|</p>|<em>|</em>"
 
         /**
          * Converts the list of nodes to a list of strings with the content of the nodes
