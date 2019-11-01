@@ -14,7 +14,7 @@ import java.net.URL
  *
  */
 class CruxDownloader {
-    private var html : String = ""
+    private var html: String = ""
 
     /**
      * Downloads the html of the website with given url and extract the content with crux.
@@ -24,7 +24,7 @@ class CruxDownloader {
      * @throws MalformedURLException
      */
     @Throws(MalformedURLException::class, IOException::class)
-    fun download(url: String) : Article {
+    fun download(url: String): Article {
         downloadHtml(url)
         return ArticleExtractor.with(url, html)
             .extractMetadata()
@@ -41,12 +41,15 @@ class CruxDownloader {
      */
     @Throws(MalformedURLException::class, IOException::class)
     private fun downloadHtml(url: String) {
-        val cruxUrl : CruxURL = CruxURL.parse(url) ?: throw MalformedURLException()
+        val cruxUrl: CruxURL = CruxURL.parse(url) ?: throw MalformedURLException()
         cruxUrl.resolveRedirects()
         if (cruxUrl.isLikelyArticle) {
             val connection = URL(url).openConnection()
             //TODO figure out proper user agent
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; …) Gecko/20100101 Firefox/69.0")
+            connection.setRequestProperty(
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; …) Gecko/20100101 Firefox/69.0"
+            )
             connection.connect()
 
             val reader = BufferedReader(
