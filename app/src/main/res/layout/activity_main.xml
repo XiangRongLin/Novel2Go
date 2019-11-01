@@ -47,13 +47,13 @@
         android:layout_marginEnd="@dimen/margin_input_field"
         android:hint="yourname@kindle.com"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@id/start"
+        app:layout_constraintBottom_toTopOf="@id/button_start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_email" />
 
     <Button
-        android:id="@+id/start"
+        android:id="@+id/button_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
