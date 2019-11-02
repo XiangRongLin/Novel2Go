@@ -1,4 +1,4 @@
-package com.kaiserpudding.novel2go.downloader
+package com.kaiserpudding.novel2go.util
 
 import android.graphics.Canvas
 import android.os.Build

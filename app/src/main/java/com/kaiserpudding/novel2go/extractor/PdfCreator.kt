@@ -1,17 +1,18 @@
-package com.kaiserpudding.novel2go.downloader
+package com.kaiserpudding.novel2go.extractor
 
 import android.graphics.Color
 import android.graphics.pdf.PdfDocument
 import android.text.TextPaint
+import com.kaiserpudding.novel2go.util.drawMultilineText
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Node
 import java.io.File
 import java.io.FileOutputStream
-import org.jsoup.nodes.Document as JsoupDocument
 
 class PdfCreator {
 
     companion object {
-        fun createPdf(jsoupDocument: JsoupDocument, filesDir: File, fileName: String) {
+        fun createPdf(jsoupDocument: Document, filesDir: File, fileName: String) {
             val document = PdfDocument()
             val width = 210
             val pageInfo = PdfDocument.PageInfo.Builder(width, 800, 1).create()
