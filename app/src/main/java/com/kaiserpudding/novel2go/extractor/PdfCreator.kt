@@ -33,8 +33,8 @@ class PdfCreator {
                     paint,
                     width - 20,
                     10f,
-                    20f + height
-                ) + 5
+                    0f + height
+                )
             }
             document.finishPage(page)
             document.writeTo(FileOutputStream("$filesDir/$fileName"))
