@@ -9,7 +9,8 @@ class Extractor {
         val article = downloader.download(url)
         if (!file.exists()) file.mkdirs()
         val fileName = "filenName.pdf"
-        PdfCreator.createPdf(article.document, file, fileName)
+        val pdfCreator = PdfCreator()
+        pdfCreator.createPdf(article.document, file, fileName)
         return fileName
     }
 }
