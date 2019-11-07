@@ -148,46 +148,7 @@ fun Canvas.drawMultilineText(
     return staticLayout.height
 }
 
-fun Canvas.getTextHeight(
-    text: CharSequence,
-    textPaint: TextPaint,
-    width: Int,
-    x: Float,
-    y: Float,
-    start: Int = 0,
-    end: Int = text.length,
-    alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
-    spacingMult: Float = 1f,
-    spacingAdd: Float = 0f,
-    includePad: Boolean = true,
-    ellipsizedWidth: Int = width,
-    ellipsize: TextUtils.TruncateAt? = null
-): Int {
-
-    val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-" +
-            "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize"
-
-    // The public constructor was deprecated in API level 28,
-    // but the builder is only available from API level 23 onwards
-    val staticLayout =
-        StaticLayoutCache[cacheKey] ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StaticLayout.Builder.obtain(text, start, end, textPaint, width)
-                .setAlignment(alignment)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setIncludePad(includePad)
-                .setEllipsizedWidth(ellipsizedWidth)
-                .setEllipsize(ellipsize)
-                .build()
-        } else {
-            StaticLayout(
-                text, start, end, textPaint, width, alignment,
-                spacingMult, spacingAdd, includePad, ellipsize, ellipsizedWidth
-            )
-                .apply { StaticLayoutCache[cacheKey] = this }
-        }
-    return staticLayout.height
-}
-private fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
+fun StaticLayout.draw(canvas: Canvas, x: Float, y: Float) {
     canvas.withTranslation(x, y) {
         draw(this)
     }

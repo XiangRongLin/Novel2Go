@@ -2,9 +2,13 @@ package com.kaiserpudding.novel2go.extractor
 
 import android.graphics.Color
 import android.graphics.pdf.PdfDocument
+import android.os.Build
+import android.text.Layout
+import android.text.StaticLayout
 import android.text.TextPaint
-import com.kaiserpudding.novel2go.util.drawMultilineText
-import com.kaiserpudding.novel2go.util.getTextHeight
+import android.text.TextUtils
+import androidx.core.graphics.withTranslation
+import com.kaiserpudding.novel2go.util.draw
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Node
 import java.io.File
@@ -32,14 +36,14 @@ class PdfCreator {
         val paragraphs = parseParagraphs(jsoupDocument.childNodes())
         var sumHeight = 0
         var textHeight: Int
+        var staticLayout: StaticLayout
         for (paragraph: String in paragraphs) {
-            textHeight = canvas.getTextHeight(
+            staticLayout = createStaticLayout(
                 paragraph,
                 paint,
-                a4Width - 20,
-                10f,
-                0f + sumHeight
+                a4Width - 20
             )
+            textHeight = staticLayout.height
             if (sumHeight + textHeight >= a4Height) {
                 document.finishPage(page)
                 pageNumber++
@@ -49,13 +53,11 @@ class PdfCreator {
                 sumHeight = 0
 
             }
-            sumHeight += canvas.drawMultilineText(
-                paragraph,
-                paint,
-                a4Width - 20,
-                10f,
-                0f + sumHeight
-            )
+            canvas.withTranslation(10f, 0f + sumHeight) {
+                staticLayout.draw(canvas)
+            }
+            staticLayout.draw(canvas, 10f, 0f + sumHeight)
+            sumHeight += textHeight
         }
         document.finishPage(page)
         document.writeTo(FileOutputStream("$filesDir/$fileName"))
@@ -75,6 +77,35 @@ class PdfCreator {
             paragraphs.add(text.toString().replace(regex, ""))
         }
         return paragraphs
+    }
+
+    private fun createStaticLayout(
+        text: CharSequence,
+        textPaint: TextPaint,
+        width: Int,
+        start: Int = 0,
+        end: Int = text.length,
+        alignment: Layout.Alignment = Layout.Alignment.ALIGN_NORMAL,
+        spacingMult: Float = 1f,
+        spacingAdd: Float = 0f,
+        includePad: Boolean = true,
+        ellipsizedWidth: Int = width,
+        ellipsize: TextUtils.TruncateAt? = null
+    ): StaticLayout {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            StaticLayout.Builder.obtain(text, start, end, textPaint, width)
+                .setAlignment(alignment)
+                .setLineSpacing(spacingAdd, spacingMult)
+                .setIncludePad(includePad)
+                .setEllipsizedWidth(ellipsizedWidth)
+                .setEllipsize(ellipsize)
+                .build()
+        } else {
+            StaticLayout(
+                text, start, end, textPaint, width, alignment,
+                spacingMult, spacingAdd, includePad, ellipsize, ellipsizedWidth
+            )
+        }
     }
 
 }
