@@ -2,7 +2,9 @@ package com.kaiserpudding.novel2go.extractor
 
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Node
+import org.jsoup.nodes.TextNode
 import java.io.File
+import java.lang.StringBuilder
 
 class PdfCreator {
 
@@ -26,9 +28,23 @@ class PdfCreator {
         val paragraphs = mutableListOf<String>()
         val regex = Regex(htmlTagRegex)
         for (text in nodes) {
-            paragraphs.add(text.toString().replace(regex, ""))
+            val tmpDebug = getString(text)
+            paragraphs.add(tmpDebug.replace(regex, ""))
         }
         return paragraphs
+    }
+
+    private fun getString(node: Node): String {
+        //TextNode if a LeafNode, so no children
+        return if (node is TextNode) {
+            node.text()
+        } else {
+            val sb = StringBuilder()
+            node.childNodes().forEach {
+                sb.append(getString(it))
+            }
+            sb.toString()
+        }
     }
 
 
