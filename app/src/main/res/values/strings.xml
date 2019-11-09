@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Novel2Go</string>
+    <string name="kindle_email_title">Kindle email</string>
+    <string name="use_amazon_convert_title">Use Amazons pdf conversion feature</string>
+    <string name="use_amazon_convert_summary">It converts pdf into azw format.</string>
 </resources>

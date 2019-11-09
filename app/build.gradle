@@ -40,6 +40,9 @@ dependencies {
     //Jetpack navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    //Jetpack preference
+    implementation "androidx.preference:preference-ktx:$preference_version"
+
     //Readability parser
     implementation 'com.chimbori.crux:crux:2.2.0'
     implementation 'org.jsoup:jsoup:1.12.1'

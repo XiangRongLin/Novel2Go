@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import com.kaiserpudding.novel2go.extractor.Extractor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
