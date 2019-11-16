@@ -9,5 +9,5 @@
         android:id="@+id/fragment_download"
         android:name="com.kaiserpudding.novel2go.DownloadFragment"
         android:label="fragment_fragment_download"
-        tools:layout="@layout/fragment_fragment_download" />
+        tools:layout="@layout/fragment_download" />
 </navigation>
