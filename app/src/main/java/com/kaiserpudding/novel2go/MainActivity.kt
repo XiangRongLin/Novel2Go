@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(),
 
             when (item.itemId) {
                 R.id.home -> {
-                    navController.popBackStack(R.id.fragment_download, true)
+                    navController.popBackStack(R.id.fragment_download, false)
                 }
                 R.id.settings -> {
                     navController.navigate(R.id.action_global_settingsFragment)
