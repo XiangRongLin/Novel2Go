@@ -25,13 +25,17 @@ class MainActivity : AppCompatActivity(),
         drawerLayout = findViewById(R.id.drawer_layout)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
-        navigationView.setNavigationItemSelectedListener{item ->
+        navigationView.setNavigationItemSelectedListener { item ->
             item.isChecked = true
             drawerLayout.closeDrawers()
 
             when (item.itemId) {
-                R.id.home -> navController.navigate(R.id.fragment_download)
-            R.id.settings -> navController.navigate(R.id.settings_fragment)
+                R.id.home -> {
+                    navController.popBackStack(R.id.fragment_download, true)
+                }
+                R.id.settings -> {
+                    navController.navigate(R.id.action_global_settingsFragment)
+                }
             }
             true
         }
