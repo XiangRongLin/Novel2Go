@@ -52,7 +52,8 @@ class DownloadFragment : Fragment() {
         if (!email.isNullOrEmpty()) {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-            intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
+            val useConvert = prefs.getBoolean("use_amazon_convert", true)
+            if (useConvert) intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
             val uri = FileProvider.getUriForFile(
                 context!!,
                 BuildConfig.APPLICATION_ID + ".fileprovider",
