@@ -41,7 +41,6 @@ class DownloadFragment : Fragment() {
                 val file = activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
                 val extractor = Extractor()
                 val fileName = extractor.extractSingle(url, file!!)
-
                 startEmailIntent(file, fileName)
             }
         }
@@ -57,7 +56,7 @@ class DownloadFragment : Fragment() {
             val uri = FileProvider.getUriForFile(
                 context!!,
                 BuildConfig.APPLICATION_ID + ".fileprovider",
-                File(file, fileName)
+                File(file, "$fileName.pdf")
             )
             intent.putExtra(Intent.EXTRA_STREAM, uri)
             intent.type = "message/rfc/822"
