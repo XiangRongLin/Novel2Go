@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
         android:key="use_amazon_convert"
         android:title="@string/use_amazon_convert_title"
         android:defaultValue="true"
-        android:summary="@string/use_amazon_convert_summary"/>
+        android:summary="@string/use_amazon_convert_summary" />
 
     <EditTextPreference
         android:key="kindle_email"
         android:title="@string/kindle_email_title"
-        android:dialogLayout="@layout/preference_email_edit_text"/>
+        android:dialogLayout="@layout/preference_email_edit_text" />
 
 </PreferenceScreen>

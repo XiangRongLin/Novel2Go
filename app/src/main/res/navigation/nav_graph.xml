@@ -7,14 +7,15 @@
 
     <fragment
         android:id="@+id/fragment_download"
-        android:name="com.kaiserpudding.novel2go.DownloadFragment"
+        android:name="com.kaiserpudding.novel2go.extractor.DownloadFragment"
         android:label="fragment_fragment_download"
         tools:layout="@layout/fragment_download" />
     <fragment
         android:id="@+id/settings_fragment"
-        android:name="com.kaiserpudding.novel2go.SettingsFragment"
+        android:name="com.kaiserpudding.novel2go.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
-    <action android:id="@+id/action_global_settingsFragment"
+    <action
+        android:id="@+id/action_global_settingsFragment"
         app:destination="@id/settings_fragment" />
 </navigation>
