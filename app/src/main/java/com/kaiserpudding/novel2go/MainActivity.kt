@@ -1,11 +1,9 @@
 package com.kaiserpudding.novel2go
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationView
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity(),
 
             when (item.itemId) {
                 R.id.home -> navController.navigate(R.id.fragment_download)
-//            R.id.settings ->
+            R.id.settings -> navController.navigate(R.id.settings_fragment)
             }
             true
         }
