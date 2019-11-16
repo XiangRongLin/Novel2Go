@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationView
-import com.kaiserpudding.novel2go.extractor.DownloadFragment
+import com.kaiserpudding.novel2go.download.DownloadFragment
 
 class MainActivity : AppCompatActivity(),
     DownloadFragment.OnDownloadInteractionListener {

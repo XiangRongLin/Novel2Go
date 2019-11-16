@@ -1,4 +1,4 @@
-package com.kaiserpudding.novel2go.extractor
+package com.kaiserpudding.novel2go.download
 
 import android.content.Context
 import android.content.Intent
@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.kaiserpudding.novel2go.BuildConfig
 import com.kaiserpudding.novel2go.R
+import com.kaiserpudding.novel2go.extractor.Extractor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
