@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.kaiserpudding.novel2go.BuildConfig
 import com.kaiserpudding.novel2go.R
 import kotlinx.coroutines.GlobalScope
@@ -36,28 +37,33 @@ class DownloadFragment : Fragment() {
             val urlEditText = view.findViewById<EditText>(R.id.edit_text_url)
             val url = urlEditText.text.toString()
             urlEditText.setText("")
-            val email = view.findViewById<EditText>(R.id.edit_text_email).text.toString()
             GlobalScope.launch {
                 val file = activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
                 val extractor = Extractor()
                 val fileName = extractor.extractSingle(url, file!!)
-                startEmailIntent(email, file, fileName)
+
+                startEmailIntent(file, fileName)
             }
         }
     }
 
-    private fun startEmailIntent(email: String, file: File, fileName: String) {
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-        intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
-        val uri = FileProvider.getUriForFile(
-            context!!,
-            BuildConfig.APPLICATION_ID + ".fileprovider",
-            File(file, fileName)
-        )
-        intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.type = "message/rfc/822"
-        startActivity(Intent.createChooser(intent, "send mail"))
+    private fun startEmailIntent(file: File, fileName: String) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val email = prefs.getString("kindle_email", "")
+        if (!email.isNullOrEmpty()) {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
+            val uri = FileProvider.getUriForFile(
+                context!!,
+                BuildConfig.APPLICATION_ID + ".fileprovider",
+                File(file, fileName)
+            )
+            intent.putExtra(Intent.EXTRA_STREAM, uri)
+            intent.type = "message/rfc/822"
+            startActivity(Intent.createChooser(intent, "send mail"))
+        }
+
     }
 
     override fun onCreateView(

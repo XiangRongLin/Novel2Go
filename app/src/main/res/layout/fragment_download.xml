@@ -24,33 +24,10 @@
         android:layout_marginEnd="@dimen/margin_input_field"
         android:hint="https://www.youtube.com/watch?v=YthChN1Wq8M"
         android:inputType="textUri"
-        app:layout_constraintBottom_toTopOf="@id/text_view_email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_url" />
-
-    <TextView
-        android:id="@+id/text_view_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        app:layout_constraintBottom_toTopOf="@id/edit_text_email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
-
-    <EditText
-        android:id="@+id/edit_text_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_input_field"
-        android:layout_marginEnd="@dimen/margin_input_field"
-        android:hint="yourname@kindle.com"
-        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@id/button_start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_email" />
+        app:layout_constraintTop_toBottomOf="@id/text_view_url" />
 
     <Button
         android:id="@+id/button_start"
@@ -61,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_email" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"
