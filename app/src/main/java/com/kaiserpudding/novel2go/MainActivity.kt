@@ -7,10 +7,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationView
-import com.kaiserpudding.novel2go.download.DownloadFragment
+import com.kaiserpudding.novel2go.download.NewDownloadFragment
 
 class MainActivity : AppCompatActivity(),
-    DownloadFragment.OnDownloadInteractionListener {
+    NewDownloadFragment.OnDownloadInteractionListener {
 
     private lateinit var navController: NavController
     private lateinit var drawerLayout: DrawerLayout

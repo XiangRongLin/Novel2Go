@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/fragment_download"
-        android:name="com.kaiserpudding.novel2go.download.DownloadFragment"
+        android:name="com.kaiserpudding.novel2go.download.NewDownloadFragment"
         android:label="fragment_fragment_download"
-        tools:layout="@layout/fragment_download" />
+        tools:layout="@layout/fragment_new_download" />
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.kaiserpudding.novel2go.settings.SettingsFragment"
