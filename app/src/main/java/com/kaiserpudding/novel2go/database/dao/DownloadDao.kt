@@ -7,6 +7,6 @@ import com.kaiserpudding.novel2go.model.Download
 @Dao
 interface DownloadDao : BaseDao<Download> {
 
-    @Query("SELECT * FROM download" )
+    @Query("SELECT * FROM downloads" )
     fun getAll() : LiveData<List<Download>>
 }

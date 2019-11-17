@@ -11,10 +11,12 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
 import com.kaiserpudding.novel2go.BuildConfig
 import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.extractor.Extractor
+import com.kaiserpudding.novel2go.model.Download
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -29,7 +31,9 @@ import java.io.File
  */
 class DownloadFragment : Fragment() {
     private var listener: OnDownloadInteractionListener? = null
-
+    private val downloadViewModel: DownloadViewModel by lazy {
+        ViewModelProviders.of(this).get(DownloadViewModel::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,6 +46,7 @@ class DownloadFragment : Fragment() {
                 val file = activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
                 val extractor = Extractor()
                 val fileName = extractor.extractSingle(url, file!!)
+                downloadViewModel.insert(Download(fileName, file.absolutePath, url))
                 startEmailIntent(file, fileName)
             }
         }
