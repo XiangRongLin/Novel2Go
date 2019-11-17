@@ -68,7 +68,7 @@ abstract class MultiSelectFragment<T, A : MultiSelectAdapter<T>> : Fragment(),
         adapter.clearSelectedThenNotify()
     }
 
-    protected abstract fun onListInteraction(itemId: Long)
+    protected abstract fun onListInteraction(position: Int)
 
     /**
      * Start/Stop/Continue action mode depending on if [MultiSelectAdapter.inSelectionMode]
@@ -83,7 +83,7 @@ abstract class MultiSelectFragment<T, A : MultiSelectAdapter<T>> : Fragment(),
         }
     }
 
-    override fun onMultiSelectAdapterInteraction(itemId: Long) {
-        onListInteraction(itemId)
+    override fun onMultiSelectAdapterInteraction(position: Int) {
+        onListInteraction(position)
     }
 }

@@ -83,7 +83,7 @@ abstract class MultiSelectAdapter<T>(
         init {
             view.setSafeOnClickListener {
                 if (inSelectionMode) toggleSelectedThenNotify(adapterPosition)
-                else listener.onMultiSelectAdapterInteraction(getItemId(adapterPosition))
+                else listener.onMultiSelectAdapterInteraction(adapterPosition)
             }
             view.setOnLongClickListener {
                 toggleSelectedThenNotify(adapterPosition); true
@@ -107,8 +107,8 @@ abstract class MultiSelectAdapter<T>(
         /**
          * Gets called when an item was clicked on while adapter is not [inSelectionMode]
          *
-         * @param itemId The id of the item that was clicked.
+         * @param position The position of the item that was clicked.
          */
-        fun onMultiSelectAdapterInteraction(itemId: Long)
+        fun onMultiSelectAdapterInteraction(position: Int)
     }
 }
