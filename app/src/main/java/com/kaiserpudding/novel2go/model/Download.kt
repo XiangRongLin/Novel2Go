@@ -7,7 +7,9 @@ import androidx.room.PrimaryKey
 data class Download(
     val title: String,
     val path: String,
-    val url: String
+    val url: String,
+    var bytes : Long,
+    var timestamp: Long
 ) {
 
     @PrimaryKey(autoGenerate = true)

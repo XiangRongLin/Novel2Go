@@ -46,7 +46,16 @@ class DownloadFragment : Fragment() {
                 val file = activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
                 val extractor = Extractor()
                 val fileName = extractor.extractSingle(url, file!!)
-                downloadViewModel.insert(Download(fileName, file.absolutePath, url))
+                val tmp =  File(file, "$fileName.pdf")
+                downloadViewModel.insert(
+                    Download(
+                        fileName,
+                        file.absolutePath,
+                        url,
+                        tmp.length(),
+                        System.currentTimeMillis()
+                    )
+                )
                 startEmailIntent(file, fileName)
             }
         }
