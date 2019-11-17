@@ -42,6 +42,9 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
     //Jetpack preference
     implementation "androidx.preference:preference-ktx:$preference_version"
+    // Jetpack Room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     //Readability parser
     implementation 'com.chimbori.crux:crux:2.2.0'
