@@ -1,17 +1,22 @@
 package com.kaiserpudding.novel2go.download
 
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.kaiserpudding.novel2go.BuildConfig
 import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.model.Download
 import com.kaiserpudding.novel2go.util.multiSelect.MultiSelectFragment
 import com.kaiserpudding.novel2go.util.setSafeOnClickListener
+import java.io.File
 
 /**
  * A fragment representing a list of Items.
@@ -26,8 +31,17 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onListInteraction(itemId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onListInteraction(position: Int) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(
+            FileProvider.getUriForFile(
+                context!!,
+                BuildConfig.APPLICATION_ID + ".fileprovider",
+                File(adapter.list[position].path, adapter.list[position].title + ".pdf")
+            ), "application/pdf"
+        )
+        intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(intent)
     }
 
 
