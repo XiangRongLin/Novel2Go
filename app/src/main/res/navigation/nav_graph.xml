@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragment_download">
+    app:startDestination="@id/downloadFragment">
 
     <fragment
         android:id="@+id/fragment_download"
@@ -18,4 +18,13 @@
     <action
         android:id="@+id/action_global_settingsFragment"
         app:destination="@id/settings_fragment" />
+    <fragment
+        android:id="@+id/downloadFragment"
+        android:name="com.kaiserpudding.novel2go.download.DownloadFragment"
+        android:label="fragment_download"
+        tools:layout="@layout/fragment_download" >
+        <action
+            android:id="@+id/action_downloadFragment_to_fragment_download"
+            app:destination="@id/fragment_download" />
+    </fragment>
 </navigation>

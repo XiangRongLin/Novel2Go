@@ -7,10 +7,13 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationView
+import com.kaiserpudding.novel2go.download.DownloadFragment
+import com.kaiserpudding.novel2go.download.DownloadFragmentDirections
 import com.kaiserpudding.novel2go.download.NewDownloadFragment
 
 class MainActivity : AppCompatActivity(),
-    NewDownloadFragment.OnDownloadInteractionListener {
+    NewDownloadFragment.OnDownloadInteractionListener,
+    DownloadFragment.OnListFragmentInteractionListener {
 
     private lateinit var navController: NavController
     private lateinit var drawerLayout: DrawerLayout
@@ -45,5 +48,11 @@ class MainActivity : AppCompatActivity(),
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, drawerLayout)
+    }
+
+    override fun onNewDownloadInteraction() {
+        navController.navigate(
+            DownloadFragmentDirections.actionDownloadFragmentToFragmentDownload()
+        )
     }
 }

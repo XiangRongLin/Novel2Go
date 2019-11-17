@@ -33,12 +33,12 @@ abstract class MultiSelectAdapter<T>(
     /**
      * The list of the items that are represented in the recycler view
      */
-    var list: List<T>? = null
+    lateinit var list: List<T>
 
 
     override fun onBindViewHolder(holder: MultiSelectViewHolder, position: Int) {
         //if item at position is selected, activate it and thus show different background color
-        holder.itemView.isActivated = selectedIdSet.contains(getMyItemId(position))
+        holder.itemView.isActivated = selectedIdSet.contains(getItemId(position))
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class MultiSelectAdapter<T>(
      * @param position
      */
     fun toggleSelectedThenNotify(position: Int) {
-        val id = getMyItemId(position)
+        val id = getItemId(position)
         if (selectedIdSet.contains(id)) selectedIdSet.remove(id)
         else selectedIdSet.add(id)
         listener.onDataSetChanged()
@@ -64,14 +64,6 @@ abstract class MultiSelectAdapter<T>(
         listener.onDataSetChanged()
         notifyDataSetChanged()
     }
-
-    /**
-     * Return the id of the item at [position]
-     *
-     * @param position
-     * @return The id of the item
-     */
-    protected abstract fun getMyItemId(position: Int): Long
 
     /**
      * Method to create a [MultiSelectViewHolder].
@@ -91,13 +83,15 @@ abstract class MultiSelectAdapter<T>(
         init {
             view.setSafeOnClickListener {
                 if (inSelectionMode) toggleSelectedThenNotify(adapterPosition)
-                else listener.onMultiSelectAdapterInteraction(getMyItemId(adapterPosition))
+                else listener.onMultiSelectAdapterInteraction(getItemId(adapterPosition))
             }
             view.setOnLongClickListener {
                 toggleSelectedThenNotify(adapterPosition); true
             }
         }
     }
+
+    abstract override fun getItemCount(): Int
 
     /**
      * Interface which must be implemented to get notified of data changes and adapter interaction

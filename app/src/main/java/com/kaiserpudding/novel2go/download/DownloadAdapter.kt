@@ -1,64 +1,55 @@
 package com.kaiserpudding.novel2go.download
 
-import androidx.recyclerview.widget.RecyclerView
+
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.kaiserpudding.novel2go.R
-
-
 import com.kaiserpudding.novel2go.download.DownloadFragment.OnListFragmentInteractionListener
-import com.kaiserpudding.novel2go.download.dummy.DummyContent.DummyItem
-
-import kotlinx.android.synthetic.main.fragment_download.view.*
+import com.kaiserpudding.novel2go.model.Download
+import com.kaiserpudding.novel2go.util.multiSelect.MultiSelectAdapter
 
 /**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
+ * [RecyclerView.Adapter] that can display a [Download] and makes a call to the
  * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
  */
 class DownloadAdapter(
-    private val mValues: List<DummyItem>,
-    private val mListener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<DownloadAdapter.ViewHolder>() {
+    private val mListener: OnListFragmentInteractionListener?,
+    multiSelectListener: MultiSelectAdapterItemInteractionListener
+) : MultiSelectAdapter<Download>(multiSelectListener) {
+    override val viewHolderId = R.id.download_item_title
 
-    private val mOnClickListener: View.OnClickListener
+    override fun getItemId(position: Int): Long {
+        return list[position].id
+    }
 
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MultiSelectViewHolder {
+        return createViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.recycler_view_item_download,
+                parent,
+                false
+            )
+        )
+    }
+
+    override fun onBindViewHolder(holder: MultiSelectViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        holder.textView.text = list[position].title
+    }
+
+    override fun getItemCount(): Int {
+        //TODO Avoid try catch
+        return try {
+            list.size
+        } catch (exception: UninitializedPropertyAccessException) {
+            0
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_download, parent, false)
-        return ViewHolder(view)
+    fun setDownloads(downloads: List<Download>) {
+        list = downloads
+        notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.content
-
-        with(holder.mView) {
-            tag = item
-            setOnClickListener(mOnClickListener)
-        }
-    }
-
-    override fun getItemCount(): Int = mValues.size
-
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
-
-        override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
-        }
-    }
 }
