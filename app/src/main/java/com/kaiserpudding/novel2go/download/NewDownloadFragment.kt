@@ -41,7 +41,7 @@ class NewDownloadFragment : Fragment() {
         button.setOnClickListener {
             val urlEditText = view.findViewById<EditText>(R.id.edit_text_url)
             val url = urlEditText.text.toString()
-            urlEditText.setText("")
+//            listener!!.onStartDownload()
             GlobalScope.launch {
                 val file = activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
                 val extractor = Extractor()
@@ -115,6 +115,6 @@ class NewDownloadFragment : Fragment() {
      * for more information.
      */
     interface OnDownloadInteractionListener {
-
+        fun onStartDownload()
     }
 }

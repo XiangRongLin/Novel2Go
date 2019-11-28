@@ -55,4 +55,8 @@ class MainActivity : AppCompatActivity(),
             DownloadFragmentDirections.actionDownloadFragmentToFragmentDownload()
         )
     }
+
+    override fun onStartDownload() {
+        navController.popBackStack()
+    }
 }
