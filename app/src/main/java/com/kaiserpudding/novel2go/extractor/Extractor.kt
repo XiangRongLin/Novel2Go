@@ -9,7 +9,8 @@ class Extractor {
         val article = downloader.download(url)
         if (!file.exists()) file.mkdirs()
         val pdfCreator = PdfCreator()
-        pdfCreator.createPdf(article.document, file, article.title)
-        return article.title
+        val fileName = article.title.replace("[\\\\/:*?\"<>|]".toRegex(), "_")
+        pdfCreator.createPdf(article.document, file, fileName)
+        return fileName
     }
 }
