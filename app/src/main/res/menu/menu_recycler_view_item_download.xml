@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="Send to Kindle"
+        android:id="@+id/send_to_kindle"
+        app:showAsAction="never"/>
+
+    <item android:title="Open with"
+        android:id="@+id/open_with"
+        app:showAsAction="never"/>
+
+</menu>
