@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,6 +36,24 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             (recyclerView.findViewHolderForLayoutPosition(position) as DownloadAdapter.DownloadViewHolder).optionsView
         )
         popupMenu.inflate(R.menu.menu_recycler_view_item_download)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.send_to_kindle -> {
+                    startEmailIntent(
+                        File(
+                            activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+                            adapter.list[position].title + ".pdf"
+                        )
+                    )
+                    true
+                }
+                R.id.open_with -> {
+                    Log.d("popupMenu", "Open with clicked")
+                    true
+                }
+                else -> false
+            }
+        }
         popupMenu.show()
 
     }
@@ -89,6 +110,26 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             listener!!.onNewDownloadInteraction()
         }
         return view
+    }
+
+    private fun startEmailIntent(file: File) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val email = prefs.getString("kindle_email", "")
+        if (!email.isNullOrEmpty()) {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            val useConvert = prefs.getBoolean("use_amazon_convert", true)
+            if (useConvert) intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
+            val uri = FileProvider.getUriForFile(
+                context!!,
+                BuildConfig.APPLICATION_ID + ".fileprovider",
+                file
+            )
+            intent.putExtra(Intent.EXTRA_STREAM, uri)
+            intent.type = "message/rfc/822"
+            startActivity(Intent.createChooser(intent, "send mail"))
+        }
+
     }
 
     override fun onAttach(context: Context) {
