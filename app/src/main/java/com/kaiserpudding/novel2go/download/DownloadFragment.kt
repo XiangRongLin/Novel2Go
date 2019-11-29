@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.os.Bundle
 import android.view.*
+import android.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -23,7 +24,19 @@ import java.io.File
  * Activities containing this fragment MUST implement the
  * [DownloadFragment.OnListFragmentInteractionListener] interface.
  */
-class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>() {
+class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
+    DownloadAdapter.DownloadAdapterInteractionListener {
+
+    override fun onOptionsInteraction(position: Int) {
+        val popupMenu = PopupMenu(
+            context,
+            (recyclerView.findViewHolderForLayoutPosition(position) as DownloadAdapter.DownloadViewHolder).optionsView
+        )
+        popupMenu.inflate(R.menu.menu_recycler_view_item_download)
+        popupMenu.show()
+
+    }
+
     override val actionMenuId: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -46,13 +59,14 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>() {
 
 
     private lateinit var downloadViewModel: DownloadViewModel
+    private lateinit var recyclerView: RecyclerView
 
     private var listener: OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         downloadViewModel = ViewModelProviders.of(this).get(DownloadViewModel::class.java)
-        adapter = DownloadAdapter(listener, this@DownloadFragment)
+        adapter = DownloadAdapter(this, this@DownloadFragment)
 
     }
 
@@ -62,7 +76,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_download, container, false)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.download_recycler_view)
+        recyclerView = view.findViewById<RecyclerView>(R.id.download_recycler_view)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 

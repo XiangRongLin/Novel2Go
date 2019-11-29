@@ -1,10 +1,13 @@
 package com.kaiserpudding.novel2go.util.multiSelect
 
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.util.multiSelect.MultiSelectAdapter.MultiSelectAdapterItemInteractionListener
 import com.kaiserpudding.novel2go.util.setSafeOnClickListener
+import kotlinx.android.synthetic.main.recycler_view_item_download.view.*
 
 /**
  * An adapter handling the logic needed for a recycler view with clickable and selectable items.
@@ -72,13 +75,11 @@ abstract class MultiSelectAdapter<T>(
      * @param view
      * @return
      */
-    protected fun createViewHolder(view: View): MultiSelectViewHolder {
-        return MultiSelectViewHolder(view)
-    }
+//    protected fun createViewHolder(view: View): MultiSelectViewHolder {
+//        return MultiSelectViewHolder(view)
+//    }
 
-    inner class MultiSelectViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        val textView: TextView = view.findViewById(viewHolderId)
+    abstract inner class MultiSelectViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         init {
             view.setSafeOnClickListener {
@@ -110,5 +111,6 @@ abstract class MultiSelectAdapter<T>(
          * @param position The position of the item that was clicked.
          */
         fun onMultiSelectAdapterInteraction(position: Int)
+
     }
 }
