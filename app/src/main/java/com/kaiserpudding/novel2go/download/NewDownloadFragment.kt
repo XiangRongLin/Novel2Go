@@ -1,21 +1,16 @@
 package com.kaiserpudding.novel2go.download
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import com.kaiserpudding.novel2go.R
-import com.kaiserpudding.novel2go.extractor.Extractor
-import com.kaiserpudding.novel2go.model.Download
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.io.File
+import com.kaiserpudding.novel2go.download.service.DownloadService
 
 /**
  * A simple [Fragment] subclass.
@@ -27,9 +22,6 @@ import java.io.File
  */
 class NewDownloadFragment : Fragment() {
     private var listener: OnDownloadInteractionListener? = null
-    private val downloadViewModel: DownloadViewModel by lazy {
-        ViewModelProviders.of(this).get(DownloadViewModel::class.java)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,23 +30,11 @@ class NewDownloadFragment : Fragment() {
         button.setOnClickListener {
             val urlEditText = view.findViewById<EditText>(R.id.edit_text_url)
             val url = urlEditText.text.toString()
-            GlobalScope.launch {
-                val file = activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-                val extractor = Extractor()
-                val fileName = extractor.extractSingle(url, file!!)
-                val tmp = File(file, "$fileName.pdf")
-                downloadViewModel.insert(
-                    Download(
-                        fileName,
-                        file.absolutePath,
-                        url,
-                        tmp.length(),
-                        System.currentTimeMillis()
-                    )
-                )
-
+            Intent(context, DownloadService::class.java).also {
+                it.putExtra(DownloadService.DOWNLOAD_URL_INTENT_EXTRA, url)
+                activity?.startService(it)
             }
-//            listener!!.onStartDownload()
+            listener!!.onStartDownload()
         }
     }
 
