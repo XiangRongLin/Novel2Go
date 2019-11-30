@@ -1,5 +1,7 @@
 package com.kaiserpudding.novel2go.extractor
 
+import android.util.Log
+import com.kaiserpudding.novel2go.BuildConfig.DEBUG
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
@@ -9,6 +11,7 @@ import java.lang.StringBuilder
 class PdfCreator {
 
     fun createPdf(jsoupDocument: Document, filesDir: File, fileName: String) {
+        if (DEBUG) Log.d(LOG_TAG, "createPdf() called for $fileName")
         val paragraphs = parseParagraphs(jsoupDocument.childNodes())
         val formattedDocument = FormattedDocument()
         for (paragraph: String in paragraphs) {
@@ -50,6 +53,7 @@ class PdfCreator {
 
     companion object {
         private const val htmlTagRegex = "<p>|</p>|<em>|</em>"
+        private const val LOG_TAG = "PdfCreator"
     }
 
 }

@@ -1,8 +1,10 @@
 package com.kaiserpudding.novel2go.extractor
 
+import android.util.Log
 import com.chimbori.crux.articles.Article
 import com.chimbori.crux.articles.ArticleExtractor
 import com.chimbori.crux.urls.CruxURL
+import com.kaiserpudding.novel2go.BuildConfig.DEBUG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
@@ -27,6 +29,7 @@ class CruxDownloader {
      */
     @Throws(MalformedURLException::class, IOException::class)
     suspend fun download(url: String): Article {
+        if (DEBUG) Log.d(LOG_TAG, "download() called with $url")
         downloadHtml(url)
         return ArticleExtractor.with(url, html)
             .extractMetadata()
@@ -63,5 +66,9 @@ class CruxDownloader {
                 reader.close()
             }
         }
+    }
+
+    companion object {
+        private const val LOG_TAG = "CruxDownloader"
     }
 }

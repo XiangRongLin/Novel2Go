@@ -7,7 +7,9 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
+import android.util.Log
 import androidx.core.graphics.withTranslation
+import com.kaiserpudding.novel2go.BuildConfig.DEBUG
 import java.io.File
 import java.io.FileOutputStream
 
@@ -25,8 +27,8 @@ class FormattedDocument {
     init {
         page = document.startPage(
             PdfDocument.PageInfo.Builder(
-                a4Width,
-                a4Height,
+                A4_WIDTH,
+                A4_HEIGHT,
                 pageNumber
             ).create()
         )
@@ -38,11 +40,12 @@ class FormattedDocument {
     }
 
     fun writeText(text: String) {
+        if (DEBUG) Log.v(LOG_TAG, "writeText() called with $text")
         val staticLayout = createStaticLayout(
-            text, paint, a4Width - (paddingLeft + paddingRight)
+            text, paint, A4_WIDTH - (paddingLeft + paddingRight)
         )
 
-        if (staticLayout.height >= a4Height - usedHeight) nextPage()
+        if (staticLayout.height >= A4_HEIGHT - usedHeight) nextPage()
 
         page.canvas.withTranslation(10f, 0f + usedHeight) {
             staticLayout.draw(page.canvas)
@@ -51,11 +54,12 @@ class FormattedDocument {
     }
 
     fun nextPage() {
+        if (DEBUG) Log.v(LOG_TAG, "nextPage() called")
         document.finishPage(page)
         page = document.startPage(
             PdfDocument.PageInfo.Builder(
-                a4Width,
-                a4Height,
+                A4_WIDTH,
+                A4_HEIGHT,
                 pageNumber
             ).create()
         )
@@ -64,12 +68,14 @@ class FormattedDocument {
     }
 
     fun save(filesDir: File, fileName: String) {
+        if (DEBUG) Log.d(LOG_TAG, "save() called with $filesDir/$fileName")
         document.finishPage(page)
         document.writeTo(FileOutputStream("$filesDir/$fileName.pdf"))
         document.close()
     }
 
     fun save(outputStream: FileOutputStream) {
+        if (DEBUG) Log.d(LOG_TAG, "save() called with outputstream")
         document.finishPage(page)
         document.writeTo(outputStream)
         document.close()
@@ -105,7 +111,8 @@ class FormattedDocument {
     }
 
     companion object {
-        private const val a4Width = 595
-        private const val a4Height = 842
+        private const val LOG_TAG = "FormattedDocument"
+        private const val A4_WIDTH = 595
+        private const val A4_HEIGHT = 842
     }
 }
