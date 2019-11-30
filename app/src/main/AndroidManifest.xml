@@ -30,6 +30,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
+        <service
+            android:name=".download.service.DownloadService"
+            android:exported="false"/>
     </application>
 
 </manifest>
