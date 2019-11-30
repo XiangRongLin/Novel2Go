@@ -2,13 +2,17 @@ package com.kaiserpudding.novel2go.download
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.kaiserpudding.novel2go.BuildConfig.EXTERNAL_STORAGE_PERMISSION
 import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.download.service.DownloadService
 
@@ -26,12 +30,26 @@ class NewDownloadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        ActivityCompat.requestPermissions(
+            activity!!,
+            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            EXTERNAL_STORAGE_PERMISSION
+        )
+
         val button = view.findViewById<Button>(R.id.button_start)
         button.setOnClickListener {
             val urlEditText = view.findViewById<EditText>(R.id.edit_text_url)
             val url = urlEditText.text.toString()
+            val storagePermission = ContextCompat.checkSelfPermission(
+                context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_DENIED
+
             Intent(context, DownloadService::class.java).also {
                 it.putExtra(DownloadService.DOWNLOAD_URL_INTENT_EXTRA, url)
+                it.putExtra(
+                    DownloadService.STORAGE_PERMISSION_INTENT_EXTRA,
+                    storagePermission
+                )
                 activity?.startService(it)
             }
             listener!!.onStartDownload()

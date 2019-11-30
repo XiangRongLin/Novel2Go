@@ -21,6 +21,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
+        all {
+            buildConfigField("int", "EXTERNAL_STORAGE_PERMISSION", "1")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

@@ -21,10 +21,14 @@ class DownloadService : IntentService("DownloadService") {
     override fun onHandleIntent(intent: Intent?) {
         scope.launch {
             val url = intent!!.getStringExtra(DOWNLOAD_URL_INTENT_EXTRA)
+            val storagePermission = intent.getBooleanExtra(STORAGE_PERMISSION_INTENT_EXTRA, false)
 
             if (DEBUG) Log.d(LOG_TAG, "onHandleIntent() called with $url")
 
-            val file = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+            val file =
+                if (storagePermission) File("/storage/emulated/0/Documents/Novel2Go")
+                else baseContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+
             val fileName = extractor.extractSingle(url, file!!)
             insertDownload(
                 Download(
@@ -46,5 +50,6 @@ class DownloadService : IntentService("DownloadService") {
     companion object {
         private const val LOG_TAG = "DownloadService"
         const val DOWNLOAD_URL_INTENT_EXTRA = "download_url"
+        const val STORAGE_PERMISSION_INTENT_EXTRA = "external_storage_persmisison"
     }
 }
