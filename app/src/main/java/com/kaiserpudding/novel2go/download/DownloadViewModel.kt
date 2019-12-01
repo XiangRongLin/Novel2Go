@@ -13,7 +13,8 @@ class DownloadViewModel(application: Application) : AndroidViewModel(application
 
     private val repository: DownloadRepository =
         DownloadRepository(AppDatabase.getDatabase(application).downloadDao())
-    val allDownloads: LiveData<List<Download>> = repository.getAll()
+    val allDownloads: LiveData<List<Download>>
+        get() = repository.getAll()
 
     fun insert(download: Download) = viewModelScope.launch {
         repository.insert(download)
