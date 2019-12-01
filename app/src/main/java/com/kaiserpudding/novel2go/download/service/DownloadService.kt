@@ -26,7 +26,7 @@ class DownloadService : IntentService("DownloadService") {
             if (DEBUG) Log.d(LOG_TAG, "onHandleIntent() called with $url")
 
             val file =
-                if (storagePermission) File("/storage/emulated/0/Documents/Novel2Go")
+                if (storagePermission) File(Environment.getExternalStorageDirectory(),"Documents/Novel2Go")
                 else baseContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
 
             val fileName = extractor.extractSingle(url, file!!)
