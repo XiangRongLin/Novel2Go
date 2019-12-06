@@ -68,9 +68,7 @@ class DownloadAdapter(
     }
 
     interface DownloadAdapterInteractionListener {
-
         fun onOptionsInteraction(position: Int)
-
     }
 
 }
