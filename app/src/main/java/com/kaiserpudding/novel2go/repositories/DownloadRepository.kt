@@ -20,6 +20,12 @@ class DownloadRepository(private val downloadDao: DownloadDao) {
         }
     }
 
+    suspend fun delete(downloads: LongArray) {
+        withContext(Dispatchers.IO) {
+            downloadDao.delete(downloads)
+        }
+    }
+
     fun getAll(): LiveData<List<Download>> {
         return downloadDao.getAll()
     }

@@ -19,4 +19,8 @@ class DownloadViewModel(application: Application) : AndroidViewModel(application
     fun insert(download: Download) = viewModelScope.launch {
         repository.insert(download)
     }
+
+    fun delete(downloads: LongArray) = viewModelScope.launch {
+        repository.delete(downloads)
+    }
 }

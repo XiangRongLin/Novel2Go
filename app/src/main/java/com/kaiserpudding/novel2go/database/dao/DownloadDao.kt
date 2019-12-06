@@ -9,4 +9,7 @@ interface DownloadDao : BaseDao<Download> {
 
     @Query("SELECT * FROM downloads" )
     fun getAll() : LiveData<List<Download>>
+
+    @Query("DELETE FROM downloads WHERE id IN (:downloads)")
+    fun delete(downloads: LongArray)
 }
