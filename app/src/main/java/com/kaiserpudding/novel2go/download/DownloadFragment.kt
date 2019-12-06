@@ -40,10 +40,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             when (menuItem.itemId) {
                 R.id.send_to_kindle -> {
                     startEmailIntent(
-                        File(
-                            adapter.list[position].path,
-                            adapter.list[position].title + ".pdf"
-                        )
+                        adapter.list[position].file
                     )
                     true
                 }
@@ -82,7 +79,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             FileProvider.getUriForFile(
                 context!!,
                 "$APPLICATION_ID.fileprovider",
-                File(adapter.list[position].path, adapter.list[position].title + ".pdf")
+                adapter.list[position].file
             ), "application/pdf"
         )
         intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
