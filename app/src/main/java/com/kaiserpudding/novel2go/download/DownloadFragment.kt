@@ -101,6 +101,10 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
     }
 
     override fun onListInteraction(position: Int) {
+        openFile(position)
+    }
+
+    private fun openFile(position: Int) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(
             FileProvider.getUriForFile(
@@ -128,7 +132,8 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
                     true
                 }
                 R.id.open_with -> {
-                    Log.d("popupMenu", "Open with clicked")
+                    Log.d(LOG_TAG, "Open with clicked")
+                    openFile(position)
                     true
                 }
                 else -> false
