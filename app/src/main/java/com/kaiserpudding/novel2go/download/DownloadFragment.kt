@@ -20,7 +20,6 @@ import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.model.Download
 import com.kaiserpudding.novel2go.util.multiSelect.MultiSelectFragment
 import com.kaiserpudding.novel2go.util.setSafeOnClickListener
-import java.io.File
 
 /**
  * A fragment representing a list of Items.
@@ -81,7 +80,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
         return view
     }
 
-    private fun startEmailIntent(file: File) {
+    private fun startEmailIntent(position: Int) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val email = prefs.getString("kindle_email", "")
         if (!email.isNullOrEmpty()) {
@@ -92,7 +91,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             val uri = FileProvider.getUriForFile(
                 context!!,
                 "$APPLICATION_ID.fileprovider",
-                file
+                adapter.list[position].file
             )
             intent.putExtra(Intent.EXTRA_STREAM, uri)
             intent.type = "message/rfc/822"
@@ -101,20 +100,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
     }
 
     override fun onListInteraction(position: Int) {
-        openFile(position)
-    }
-
-    private fun openFile(position: Int) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(
-            FileProvider.getUriForFile(
-                context!!,
-                "$APPLICATION_ID.fileprovider",
-                adapter.list[position].file
-            ), "application/pdf"
-        )
-        intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
-        startActivity(intent)
+        startOpenFileIntent(position)
     }
 
     override fun onOptionsInteraction(position: Int) {
@@ -126,20 +112,31 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.send_to_kindle -> {
-                    startEmailIntent(
-                        adapter.list[position].file
-                    )
+                    startEmailIntent(position)
                     true
                 }
                 R.id.open_with -> {
                     Log.d(LOG_TAG, "Open with clicked")
-                    openFile(position)
+                    startOpenFileIntent(position)
                     true
                 }
                 else -> false
             }
         }
         popupMenu.show()
+    }
+
+    private fun startOpenFileIntent(position: Int) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(
+            FileProvider.getUriForFile(
+                context!!,
+                "$APPLICATION_ID.fileprovider",
+                adapter.list[position].file
+            ), "application/pdf"
+        )
+        intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(intent)
     }
 
     override fun onAttach(context: Context) {
