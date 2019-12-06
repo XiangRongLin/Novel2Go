@@ -65,7 +65,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
     ): View? {
         val view = inflater.inflate(R.layout.fragment_download, container, false)
 
-        recyclerView = view.findViewById<RecyclerView>(R.id.download_recycler_view)
+        recyclerView = view.findViewById(R.id.download_recycler_view)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -78,6 +78,52 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             listener!!.onNewDownloadInteraction()
         }
         return view
+    }
+
+    override fun onListInteraction(position: Int) {
+        startOpenFileIntent(position)
+    }
+
+    override fun onOptionsInteraction(position: Int) {
+        val popupMenu = PopupMenu(
+            context,
+            (recyclerView.findViewHolderForLayoutPosition(position) as DownloadAdapter.DownloadViewHolder).optionsView
+        )
+        popupMenu.inflate(R.menu.menu_recycler_view_item_download)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.share -> {
+                    Log.d(LOG_TAG, "Share clicked")
+                    startShareIntent(position)
+                    true
+                }
+                R.id.send_to_kindle -> {
+                    Log.d(LOG_TAG, "Send email clicked")
+                    startEmailIntent(position)
+                    true
+                }
+                R.id.open_with -> {
+                    Log.d(LOG_TAG, "Open with clicked")
+                    startOpenFileIntent(position)
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
+    }
+
+    private fun startShareIntent(position: Int) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.setDataAndType(
+            FileProvider.getUriForFile(
+                context!!,
+                "$APPLICATION_ID.fileprovider",
+                adapter.list[position].file
+            ), "application/pdf"
+        )
+        intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(Intent.createChooser(intent, "Share via"))
     }
 
     private fun startEmailIntent(position: Int) {
@@ -94,36 +140,9 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
                 adapter.list[position].file
             )
             intent.putExtra(Intent.EXTRA_STREAM, uri)
-            intent.type = "message/rfc/822"
+            intent.type = "message/rfc822"
             startActivity(Intent.createChooser(intent, "send mail"))
         }
-    }
-
-    override fun onListInteraction(position: Int) {
-        startOpenFileIntent(position)
-    }
-
-    override fun onOptionsInteraction(position: Int) {
-        val popupMenu = PopupMenu(
-            context,
-            (recyclerView.findViewHolderForLayoutPosition(position) as DownloadAdapter.DownloadViewHolder).optionsView
-        )
-        popupMenu.inflate(R.menu.menu_recycler_view_item_download)
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.send_to_kindle -> {
-                    startEmailIntent(position)
-                    true
-                }
-                R.id.open_with -> {
-                    Log.d(LOG_TAG, "Open with clicked")
-                    startOpenFileIntent(position)
-                    true
-                }
-                else -> false
-            }
-        }
-        popupMenu.show()
     }
 
     private fun startOpenFileIntent(position: Int) {
