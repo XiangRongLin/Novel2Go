@@ -41,7 +41,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
                 R.id.send_to_kindle -> {
                     startEmailIntent(
                         File(
-                            activity?.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+                            adapter.list[position].path,
                             adapter.list[position].title + ".pdf"
                         )
                     )
