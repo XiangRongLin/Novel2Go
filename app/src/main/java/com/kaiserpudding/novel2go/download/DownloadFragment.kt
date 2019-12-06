@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
@@ -15,7 +14,8 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.kaiserpudding.novel2go.BuildConfig
+import com.kaiserpudding.novel2go.BuildConfig.APPLICATION_ID
+import com.kaiserpudding.novel2go.BuildConfig.DEBUG
 import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.model.Download
 import com.kaiserpudding.novel2go.util.multiSelect.MultiSelectFragment
@@ -58,19 +58,30 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
 
     }
 
-    override val actionMenuId: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+    override val actionModeCallback: MultiSelectActionModeCallback =
+        object : MultiSelectActionModeCallback() {
+            override val actionMenuId: Int = R.menu.selection_delete_menu
 
-    override fun onMyActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+            override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+                Log.d(LOG_TAG, "Action item clicked with mode $mode and item $item")
+                return when (item.itemId) {
+                    R.id.action_delete -> {
+                        if (DEBUG) Log.d(LOG_TAG, "Action item 'delete' clicked")
+                        downloadViewModel.delete(adapter.selectedIdArray)
+                        actionMode?.finish()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
 
     override fun onListInteraction(position: Int) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(
             FileProvider.getUriForFile(
                 context!!,
-                BuildConfig.APPLICATION_ID + ".fileprovider",
+                "$APPLICATION_ID.fileprovider",
                 File(adapter.list[position].path, adapter.list[position].title + ".pdf")
             ), "application/pdf"
         )
@@ -122,7 +133,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             if (useConvert) intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
             val uri = FileProvider.getUriForFile(
                 context!!,
-                BuildConfig.APPLICATION_ID + ".fileprovider",
+                "$APPLICATION_ID.fileprovider",
                 file
             )
             intent.putExtra(Intent.EXTRA_STREAM, uri)
@@ -156,4 +167,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
         fun onNewDownloadInteraction()
     }
 
+    companion object {
+        private const val LOG_TAG = "DownloadFragment"
+    }
 }
