@@ -24,21 +24,31 @@
         android:layout_marginEnd="@dimen/margin_input_field"
         android:hint="https://www.youtube.com/watch?v=YthChN1Wq8M"
         android:inputType="textUri"
-        app:layout_constraintBottom_toTopOf="@id/button_start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_view_url" />
+
+    <CheckBox
+        android:id="@+id/checkbox_toc_download"
+        android:text="Table of Contents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
 
     <Button
         android:id="@+id/button_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
         android:text="Start"
+        android:layout_marginBottom="68dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_url"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"
@@ -46,5 +56,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="300dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

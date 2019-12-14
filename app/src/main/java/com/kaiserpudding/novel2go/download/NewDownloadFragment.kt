@@ -41,6 +41,7 @@ class NewDownloadFragment : Fragment() {
         val button = view.findViewById<Button>(R.id.button_start)
         button.setOnClickListener {
             val url = edit_text_url.text.toString()
+            val isTOCDownload = checkbox_toc_download.isChecked
             val storagePermission = ContextCompat.checkSelfPermission(
                 context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_DENIED
@@ -50,6 +51,14 @@ class NewDownloadFragment : Fragment() {
                 it.putExtra(
                     DownloadService.STORAGE_PERMISSION_INTENT_EXTRA,
                     storagePermission
+                )
+                if (isTOCDownload) it.putExtra(
+                    DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
+                    DownloadService.DOWNLOAD_MODE_MULTI
+                )
+                else it.putExtra(
+                    DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
+                    DownloadService.DOWNLOAD_MODE_SINGLE
                 )
                 activity?.startService(it)
             }
