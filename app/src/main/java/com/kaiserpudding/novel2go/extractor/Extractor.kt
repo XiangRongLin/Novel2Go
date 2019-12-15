@@ -2,7 +2,10 @@ package com.kaiserpudding.novel2go.extractor
 
 import android.util.Log
 import com.kaiserpudding.novel2go.BuildConfig.DEBUG
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import java.io.File
 import java.net.URL
@@ -22,18 +25,34 @@ class Extractor {
         return fileName
     }
 
+    /**
+     * Extracts multiple file from the given [link] of a "table of contents" site.
+     * The chapters get identified by the [regex].
+     *
+     * @param link The url to extract the links from.
+     * @param file The place to save the downloaded files.
+     * @param regex Used to identify which urls in the html of the given link to download.
+     * Default is "chapter \\d+" ("chapter " followed by numbers).
+     * @return A [Channel] of [Pair] of [String].
+     * [Pair.first] is the url of the download, [Pair.second] is the file name.
+     */
     suspend fun extractMulti(
         link: String,
         file: File,
         regex: Regex = "chapter \\d+".toRegex()
-    ): List<String> {
+    ): Channel<Pair<String, String>> {
         if (DEBUG) Log.d(LOG_TAG, "extractMulti() called with $link")
-        val fileNames = LinkedList<String>()
-        getUrls(link, regex).forEach {
-            fileNames.add(extractSingle(it, file))
-            delay(5000)
+        val channel = Channel<Pair<String, String>>()
+        GlobalScope.launch {
+            getUrls(link, regex).forEach { url ->
+                val fileName = extractSingle(url, file)
+                Log.d(LOG_TAG, "extractMulti() channel sent url: $url, file name: $fileName")
+                channel.send(Pair(url, fileName))
+                delay(5000)
+            }
+            channel.close()
         }
-        return fileNames
+        return channel
     }
 
     private fun getUrls(link: String, regex: Regex): List<String> {

@@ -1,9 +1,12 @@
 package com.kaiserpudding.novel2go.download.service
 
 import android.app.IntentService
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Environment
 import android.util.Log
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.Observer
 import com.kaiserpudding.novel2go.BuildConfig.DEBUG
 import com.kaiserpudding.novel2go.download.DownloadViewModel
 import com.kaiserpudding.novel2go.extractor.Extractor
@@ -36,7 +39,7 @@ class DownloadService : IntentService("DownloadService") {
                 )
                 else baseContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
 
-            when(mode) {
+            when (mode) {
                 DOWNLOAD_MODE_SINGLE -> {
                     val fileName = extractor.extractSingle(url, file!!)
                     insertDownload(
@@ -50,21 +53,20 @@ class DownloadService : IntentService("DownloadService") {
                     )
                 }
                 DOWNLOAD_MODE_MULTI -> {
-                    val fileNames = extractor.extractMulti(url, file!!)
-                    fileNames.forEach {fileName ->
+                    val channel = extractor.extractMulti(url, file!!)
+                    for (pair in channel) {
                         insertDownload(
                             Download(
-                                fileName,
+                                pair.second, //file name
                                 file.absolutePath,
-                                url,
-                                File(file, "$fileName.pdf").length(),
+                                pair.first, // url of download
+                                File(file, "${pair.second}.pdf").length(),
                                 System.currentTimeMillis()
                             )
                         )
                     }
                 }
             }
-
         }
     }
 
@@ -82,4 +84,5 @@ class DownloadService : IntentService("DownloadService") {
         const val DOWNLOAD_MODE_SINGLE = "download_mode_single"
         const val DOWNLOAD_MODE_MULTI = "download_mode_multi"
     }
+
 }
