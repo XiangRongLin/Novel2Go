@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
         <activity android:name=".MainActivity"
