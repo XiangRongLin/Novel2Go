@@ -26,10 +26,11 @@ class DownloadService : IntentService("DownloadService") {
             val url = intent!!.getStringExtra(DOWNLOAD_URL_INTENT_EXTRA)
             val mode = intent.getStringExtra(DOWNLOAD_MODE_INTENT_EXTRA)
             val storagePermission = intent.getBooleanExtra(STORAGE_PERMISSION_INTENT_EXTRA, false)
+            val regex = intent.getStringExtra(DOWNLOAD_REGEX_INTENT_EXTRA)
 
             if (DEBUG) Log.d(
                 LOG_TAG, "onHandleIntent() called with " +
-                        "url = $url, mode = $mode, storagePermissions = $storagePermission"
+                        "url = $url, mode = $mode, storagePermissions = $storagePermission, regex = $regex"
             )
 
             val file =
@@ -53,7 +54,11 @@ class DownloadService : IntentService("DownloadService") {
                     )
                 }
                 DOWNLOAD_MODE_MULTI -> {
-                    val channel = extractor.extractMulti(url, file!!)
+                    val channel = if (regex.isNullOrEmpty()) {
+                        extractor.extractMulti(url, file!!)
+                    } else {
+                        extractor.extractMulti(url, file!!, regex.toRegex())
+                    }
                     for (pair in channel) {
                         insertDownload(
                             Download(
@@ -80,6 +85,7 @@ class DownloadService : IntentService("DownloadService") {
         private const val LOG_TAG = "DownloadService"
         const val DOWNLOAD_URL_INTENT_EXTRA = "download_url"
         const val STORAGE_PERMISSION_INTENT_EXTRA = "external_storage_persmisison"
+        const val DOWNLOAD_REGEX_INTENT_EXTRA = "download_regex"
         const val DOWNLOAD_MODE_INTENT_EXTRA = "donwload_mode"
         const val DOWNLOAD_MODE_SINGLE = "download_mode_single"
         const val DOWNLOAD_MODE_MULTI = "download_mode_multi"

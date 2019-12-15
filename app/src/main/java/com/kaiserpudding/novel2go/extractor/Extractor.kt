@@ -46,10 +46,14 @@ class Extractor {
         GlobalScope.launch {
             getUrls(link, regex).forEach { url ->
                 val fileName = extractSingle(url, file)
-                Log.d(LOG_TAG, "extractMulti() channel sent url: $url, file name: $fileName")
+                if (DEBUG) Log.d(
+                    LOG_TAG,
+                    "extractMulti() channel sent url: $url, file name: $fileName"
+                )
                 channel.send(Pair(url, fileName))
                 delay(5000)
             }
+            if (DEBUG) Log.d(LOG_TAG, "extractMulti() channel closing")
             channel.close()
         }
         return channel
@@ -69,9 +73,10 @@ class Extractor {
             val filter = it.hasText()
                     && it.text().toLowerCase(Locale.ENGLISH).contains(regex)
                     && href != "/"
-                    && (href.contains(url.host, true)
-                    || (href.startsWith("/")
-                    && !href.startsWith("//")))
+                    && (href.contains(
+                url.host,
+                true
+            ) || (href.startsWith("/") && !href.startsWith("//")))
             if (DEBUG) Log.v(LOG_TAG, "getUrls() regex: $regex, url: $href, isChapter: $filter")
             filter
 //        } else {
