@@ -6,7 +6,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
 import java.io.File
-import java.lang.StringBuilder
 
 class PdfCreator {
 

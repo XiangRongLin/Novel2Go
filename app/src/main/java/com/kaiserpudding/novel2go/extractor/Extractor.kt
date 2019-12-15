@@ -63,13 +63,8 @@ class Extractor {
         val url = URL(link)
         val doc = Jsoup.connect(link).userAgent(USER_AGENT).get()
         val urls = LinkedList<String>()
-        doc.select("a").filter {
+        doc.select(HTML_LINK_TAG).filter {
             val href = it.attr(HTML_HREF_ATTR)
-//        val found = "\\d+\\.".toRegex().find(it.text())
-//        if (found != null) {
-//            found.range.first == 0 && a != "/" && (a.contains(url.host, true) || (a.startsWith(
-//                "/"
-//            ) && !a.startsWith("//")))
             val filter = it.hasText()
                     && it.text().toLowerCase(Locale.ENGLISH).contains(regex)
                     && href != "/"
@@ -79,10 +74,6 @@ class Extractor {
             ) || (href.startsWith("/") && !href.startsWith("//")))
             if (DEBUG) Log.v(LOG_TAG, "getUrls() regex: $regex, url: $href, isChapter: $filter")
             filter
-//        } else {
-//            false
-//        }
-
         }.forEach {
             var href = it.attr(HTML_HREF_ATTR)
             if (href.startsWith("/")) href = url.protocol + "://" + url.host + href

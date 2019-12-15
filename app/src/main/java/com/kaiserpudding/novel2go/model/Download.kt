@@ -9,7 +9,7 @@ data class Download(
     val title: String,
     val path: String,
     val url: String,
-    var bytes : Long,
+    var bytes: Long,
     var timestamp: Long
 ) {
 

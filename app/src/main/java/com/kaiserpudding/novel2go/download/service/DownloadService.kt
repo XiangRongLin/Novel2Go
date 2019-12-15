@@ -1,12 +1,9 @@
 package com.kaiserpudding.novel2go.download.service
 
 import android.app.IntentService
-import android.content.ComponentName
 import android.content.Intent
 import android.os.Environment
 import android.util.Log
-import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.Observer
 import com.kaiserpudding.novel2go.BuildConfig.DEBUG
 import com.kaiserpudding.novel2go.download.DownloadViewModel
 import com.kaiserpudding.novel2go.extractor.Extractor
