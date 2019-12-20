@@ -39,7 +39,7 @@ class Extractor {
     suspend fun extractMulti(
         link: String,
         file: File,
-        regex: Regex = "chapter \\d+".toRegex()
+        regex: Regex = DEFAULT_CHAPTER_REGEX
     ): Channel<Pair<String, String>> {
         if (DEBUG) Log.d(LOG_TAG, "extractMulti() called with $link")
         val channel = Channel<Pair<String, String>>()
@@ -66,13 +66,13 @@ class Extractor {
         doc.select(HTML_LINK_TAG).filter {
             val href = it.attr(HTML_HREF_ATTR)
             val filter = it.hasText()
-                    && it.text().toLowerCase(Locale.ENGLISH).contains(regex)
+                    && it.text().contains(regex)
                     && href != "/"
                     && (href.contains(
                 url.host,
                 true
             ) || (href.startsWith("/") && !href.startsWith("//")))
-            if (DEBUG) Log.v(LOG_TAG, "getUrls() regex: $regex, url: $href, isChapter: $filter")
+            if (DEBUG) Log.v(LOG_TAG, "getUrls() regex: '$regex', url: '$href', title: '${it.text()}', isChapter: '$filter'")
             filter
         }.forEach {
             var href = it.attr(HTML_HREF_ATTR)
@@ -84,6 +84,7 @@ class Extractor {
 
 
     companion object {
+        private val DEFAULT_CHAPTER_REGEX = "([cC]hapter \\d+)|(\\d+[ ]?.|:|-)".toRegex()
         private const val LOG_TAG = "Extractor"
         private const val HTML_LINK_TAG = "a"
         private const val HTML_HREF_ATTR = "href"
