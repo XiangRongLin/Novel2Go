@@ -84,7 +84,8 @@ class Extractor {
 
 
     companion object {
-        private val DEFAULT_CHAPTER_REGEX = "([cC]hapter \\d+)|(\\d+[ ]?.|:|-)".toRegex()
+        private val DEFAULT_CHAPTER_REGEX =
+            "([cC]hapter |[cC]h\\.?[ ]?)\\d+|(\\d+[ ]?[.:\\-])".toRegex()
         private const val LOG_TAG = "Extractor"
         private const val HTML_LINK_TAG = "a"
         private const val HTML_HREF_ATTR = "href"
