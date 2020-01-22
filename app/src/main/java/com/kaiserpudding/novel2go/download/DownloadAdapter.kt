@@ -29,7 +29,7 @@ class DownloadAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MultiSelectViewHolder {
         return DownloadViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.recycler_view_item_download,
+                R.layout.list_item_download,
                 parent,
                 false
             )
