@@ -13,10 +13,15 @@ import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.kaiserpudding.novel2go.BuildConfig.EXTERNAL_STORAGE_PERMISSION
 import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.download.service.DownloadService
+import com.kaiserpudding.novel2go.extractor.Extractor
+import com.kaiserpudding.novel2go.util.requestStoragePersmission
 import kotlinx.android.synthetic.main.fragment_new_download.*
+import kotlinx.coroutines.*
 
 /**
  * A simple [Fragment] subclass.
@@ -32,41 +37,47 @@ class NewDownloadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ActivityCompat.requestPermissions(
-            activity!!,
-            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            EXTERNAL_STORAGE_PERMISSION
-        )
+        requestStoragePersmission()
 
         val button = view.findViewById<Button>(R.id.button_start)
         button.setOnClickListener {
             val url = edit_text_url.text.toString()
             val isTOCDownload = checkbox_toc_download.isChecked
-            val tocRegex = edit_text_regex.text.toString()
-            val storagePermission = ContextCompat.checkSelfPermission(
-                context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_DENIED
 
-            Intent(context, DownloadService::class.java).also {
-                it.putExtra(DownloadService.DOWNLOAD_URL_INTENT_EXTRA, url)
-                it.putExtra(
-                    DownloadService.STORAGE_PERMISSION_INTENT_EXTRA,
-                    storagePermission
-                )
-                if (isTOCDownload) {
-                    it.putExtra(
-                        DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
-                        DownloadService.DOWNLOAD_MODE_MULTI
-                    )
-                    it.putExtra(DownloadService.DOWNLOAD_REGEX_INTENT_EXTRA, tocRegex)
-                } else it.putExtra(
-                    DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
-                    DownloadService.DOWNLOAD_MODE_SINGLE
-                )
-                activity?.startService(it)
+            if (isTOCDownload) {
+                listener!!.toSelectDownloads(url)
+            } else {
+
+                val tocRegex = edit_text_regex.text.toString()
+                val storagePermission = ContextCompat.checkSelfPermission(
+                    context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_DENIED
+
+                Intent(context, DownloadService::class.java).also {
+                    it.putExtra(DownloadService.DOWNLOAD_URL_INTENT_EXTRA, url)
+
+                    if (isTOCDownload) {
+                        it.putExtra(
+                            DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
+                            DownloadService.DOWNLOAD_MODE_MULTI
+                        )
+                        it.putExtra(DownloadService.DOWNLOAD_REGEX_INTENT_EXTRA, tocRegex)
+                    } else {
+                        it.putExtra(
+                            DownloadService.STORAGE_PERMISSION_INTENT_EXTRA,
+                            storagePermission
+                        )
+                        it.putExtra(
+                            DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
+                            DownloadService.DOWNLOAD_MODE_SINGLE
+                        )
+                    }
+                    activity?.startService(it)
+                }
+                listener!!.onStartDownload()
             }
             hideKeyboardAndDefocus(view.windowToken)
-            listener!!.onStartDownload()
+
         }
     }
 
@@ -116,5 +127,6 @@ class NewDownloadFragment : Fragment() {
      */
     interface OnDownloadInteractionListener {
         fun onStartDownload()
+        fun toSelectDownloads(url: String)
     }
 }

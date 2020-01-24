@@ -15,7 +15,7 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context=".download.DownloadFragment"
-        tools:listitem="@layout/recycler_view_item_download" />
+        tools:listitem="@layout/list_item_download" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/new_download_fab"

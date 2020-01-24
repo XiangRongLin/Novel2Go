@@ -9,7 +9,11 @@
         android:id="@+id/fragment_download"
         android:name="com.kaiserpudding.novel2go.download.NewDownloadFragment"
         android:label="fragment_fragment_download"
-        tools:layout="@layout/fragment_new_download" />
+        tools:layout="@layout/fragment_new_download" >
+        <action
+            android:id="@+id/action_fragment_download_to_selectDownloadFragment"
+            app:destination="@id/selectDownloadFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settings_fragment"
         android:name="com.kaiserpudding.novel2go.settings.SettingsFragment"
@@ -26,5 +30,14 @@
         <action
             android:id="@+id/action_downloadFragment_to_fragment_download"
             app:destination="@id/fragment_download" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectDownloadFragment"
+        android:name="com.kaiserpudding.novel2go.download.SelectDownloadFragment"
+        android:label="list_select_download"
+        tools:layout="@layout/list_select_download" >
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 </navigation>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import com.kaiserpudding.novel2go.BuildConfig.DEBUG
+import com.kaiserpudding.novel2go.download.DownloadInfo
 import com.kaiserpudding.novel2go.download.DownloadViewModel
 import com.kaiserpudding.novel2go.extractor.Extractor
 import com.kaiserpudding.novel2go.model.Download
@@ -23,11 +24,10 @@ class DownloadService : IntentService("DownloadService") {
             val url = intent!!.getStringExtra(DOWNLOAD_URL_INTENT_EXTRA)
             val mode = intent.getStringExtra(DOWNLOAD_MODE_INTENT_EXTRA)
             val storagePermission = intent.getBooleanExtra(STORAGE_PERMISSION_INTENT_EXTRA, false)
-            val regex = intent.getStringExtra(DOWNLOAD_REGEX_INTENT_EXTRA)
 
             if (DEBUG) Log.d(
                 LOG_TAG, "onHandleIntent() called with " +
-                        "url = $url, mode = $mode, storagePermissions = $storagePermission, regex = $regex"
+                        "url = $url, mode = $mode, storagePermissions = $storagePermission"
             )
 
             val file =
@@ -51,11 +51,16 @@ class DownloadService : IntentService("DownloadService") {
                     )
                 }
                 DOWNLOAD_MODE_MULTI -> {
-                    val channel = if (regex.isNullOrEmpty()) {
-                        extractor.extractMulti(url, file!!)
-                    } else {
-                        extractor.extractMulti(url, file!!, regex.toRegex())
-                    }
+                    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+                    val downloadInfos: List<DownloadInfo> =
+                        intent.getParcelableArrayListExtra(DownloadService.DOWNLOAD_INFOS)
+                    val channel = extractor.extractMulti(downloadInfos, file!!)
+//                    val channel = if (regex.isNullOrEmpty()) {
+//                        val downloadInfos = extractor.extractDownloadInfos(url)
+//                        extractor.extractMulti(downloadInfos, file!!)
+//                    } else {
+//                        extractor.extractMulti(url, file!!, regex.toRegex())
+//                    }
                     for (pair in channel) {
                         insertDownload(
                             Download(
@@ -86,6 +91,7 @@ class DownloadService : IntentService("DownloadService") {
         const val DOWNLOAD_MODE_INTENT_EXTRA = "donwload_mode"
         const val DOWNLOAD_MODE_SINGLE = "download_mode_single"
         const val DOWNLOAD_MODE_MULTI = "download_mode_multi"
+        const val DOWNLOAD_INFOS = "download_infos"
     }
 
 }
