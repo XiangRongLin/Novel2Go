@@ -7,7 +7,7 @@ import android.os.Parcelable
 data class DownloadInfo(
     val url: String,
     val name: String,
-    val isChapter: Boolean = false
+    var isChapter: Boolean = false
 ) : Parcelable {
 
 

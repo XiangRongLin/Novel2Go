@@ -19,6 +19,7 @@ import com.kaiserpudding.novel2go.BuildConfig.EXTERNAL_STORAGE_PERMISSION
 import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.download.service.DownloadService
 import com.kaiserpudding.novel2go.extractor.Extractor
+import com.kaiserpudding.novel2go.util.requestStoragePersmission
 import kotlinx.android.synthetic.main.fragment_new_download.*
 import kotlinx.coroutines.*
 
@@ -36,71 +37,47 @@ class NewDownloadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ActivityCompat.requestPermissions(
-            activity!!,
-            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            EXTERNAL_STORAGE_PERMISSION
-        )
+        requestStoragePersmission()
 
         val button = view.findViewById<Button>(R.id.button_start)
         button.setOnClickListener {
             val url = edit_text_url.text.toString()
             val isTOCDownload = checkbox_toc_download.isChecked
-            val tocRegex = edit_text_regex.text.toString()
-            val storagePermission = ContextCompat.checkSelfPermission(
-                context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_DENIED
 
             if (isTOCDownload) {
-                val extractor = Extractor()
-                val scope = CoroutineScope(Dispatchers.IO + Job())
-                val liveData = MutableLiveData<List<DownloadInfo>>()
-                liveData.observe(this, Observer { downloadInfo ->
+                listener!!.toSelectDownloads(url)
+            } else {
 
+                val tocRegex = edit_text_regex.text.toString()
+                val storagePermission = ContextCompat.checkSelfPermission(
+                    context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_DENIED
 
+                Intent(context, DownloadService::class.java).also {
+                    it.putExtra(DownloadService.DOWNLOAD_URL_INTENT_EXTRA, url)
 
-                    Intent(context, DownloadService::class.java).also {
+                    if (isTOCDownload) {
                         it.putExtra(
                             DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
                             DownloadService.DOWNLOAD_MODE_MULTI
                         )
-                        it.putParcelableArrayListExtra(
-                            DownloadService.DOWNLOAD_INFOS,
-                            ArrayList(downloadInfo)
+                        it.putExtra(DownloadService.DOWNLOAD_REGEX_INTENT_EXTRA, tocRegex)
+                    } else {
+                        it.putExtra(
+                            DownloadService.STORAGE_PERMISSION_INTENT_EXTRA,
+                            storagePermission
+                        )
+                        it.putExtra(
+                            DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
+                            DownloadService.DOWNLOAD_MODE_SINGLE
                         )
                     }
-                })
-                scope.launch {
-                    val result =
-                        if (tocRegex.isEmpty()) extractor.extractDownloadInfos(url)
-                        else extractor.extractDownloadInfos(url, Regex(tocRegex))
-                    liveData.postValue(result)
+                    activity?.startService(it)
                 }
-            }
-
-            Intent(context, DownloadService::class.java).also {
-                it.putExtra(DownloadService.DOWNLOAD_URL_INTENT_EXTRA, url)
-
-                if (isTOCDownload) {
-                    it.putExtra(
-                        DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
-                        DownloadService.DOWNLOAD_MODE_MULTI
-                    )
-                    it.putExtra(DownloadService.DOWNLOAD_REGEX_INTENT_EXTRA, tocRegex)
-                } else {
-                    it.putExtra(
-                        DownloadService.STORAGE_PERMISSION_INTENT_EXTRA,
-                        storagePermission
-                    )
-                    it.putExtra(
-                        DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
-                        DownloadService.DOWNLOAD_MODE_SINGLE
-                    )
-                }
-                activity?.startService(it)
+                listener!!.onStartDownload()
             }
             hideKeyboardAndDefocus(view.windowToken)
-            listener!!.onStartDownload()
+
         }
     }
 

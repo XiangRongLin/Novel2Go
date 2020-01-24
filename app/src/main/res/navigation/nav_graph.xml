@@ -37,7 +37,7 @@
         android:label="list_select_download"
         tools:layout="@layout/list_select_download" >
         <argument
-            android:name="urls"
-            app:argType="com.kaiserpudding.novel2go.download.DownloadInfo[]" />
+            android:name="url"
+            app:argType="string" />
     </fragment>
 </navigation>

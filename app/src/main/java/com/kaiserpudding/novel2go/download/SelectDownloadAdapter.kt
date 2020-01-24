@@ -9,19 +9,11 @@ import android.widget.TextView
 import com.kaiserpudding.novel2go.R
 
 
-import com.kaiserpudding.novel2go.download.SelectDownloadFragment.OnListFragmentInteractionListener
-import com.kaiserpudding.novel2go.download.dummy.DummyContent.DummyItem
-
 import kotlinx.android.synthetic.main.list_item_select_download.view.*
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
-class SelectDownloadAdapter(
-    private val list: Array<DownloadInfo>
-) : RecyclerView.Adapter<SelectDownloadAdapter.ViewHolder>() {
+class SelectDownloadAdapter : RecyclerView.Adapter<SelectDownloadAdapter.ViewHolder>() {
+
+    private val downloadInfos: MutableList<DownloadInfo> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,25 +22,39 @@ class SelectDownloadAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val downloadInfo = list[position]
+        val downloadInfo = downloadInfos[position]
 
         with(holder) {
             url.text = downloadInfo.url
             name.text = downloadInfo.name
+            isChapter.isChecked = downloadInfo.isChapter
 
             view.tag = downloadInfo
             view.setOnClickListener {
-                val checkBox = it.findViewById<CheckBox>(R.id.download_checkbox)
+                val checkBox = it.findViewById<CheckBox>(R.id.download_is_chapter)
                 checkBox.toggle()
+                downloadInfos[position].isChapter = checkBox.isSelected
             }
         }
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = downloadInfos.size
+
+    fun addDownloadInfo(info: Collection<DownloadInfo>) {
+        downloadInfos.addAll(info)
+        notifyDataSetChanged()
+    }
+
+    fun getSelected(): List<DownloadInfo> {
+        return downloadInfos.filter {
+                it.isChapter
+            }
+    }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val url: TextView = view.download_url
         val name: TextView = view.download_name
+        val isChapter: CheckBox = view.download_is_chapter
 
         override fun toString(): String {
             return super.toString() + " '" + name.text + "'"
