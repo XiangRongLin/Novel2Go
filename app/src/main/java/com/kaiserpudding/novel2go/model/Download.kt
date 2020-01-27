@@ -4,12 +4,18 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.File
 
+/**
+ * Information about the downloaded chapter for local use.
+ *
+ * @property title
+ * @property path
+ * @property url
+ */
 @Entity(tableName = "downloads")
 data class Download(
     val title: String,
     val path: String,
     val url: String,
-    var bytes: Long,
     var timestamp: Long
 ) {
 

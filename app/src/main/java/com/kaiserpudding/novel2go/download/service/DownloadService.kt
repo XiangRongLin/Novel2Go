@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import com.kaiserpudding.novel2go.BuildConfig.DEBUG
-import com.kaiserpudding.novel2go.download.DownloadInfo
+import com.kaiserpudding.novel2go.model.DownloadInfo
 import com.kaiserpudding.novel2go.download.DownloadViewModel
 import com.kaiserpudding.novel2go.extractor.Extractor
 import com.kaiserpudding.novel2go.model.Download
@@ -45,7 +45,6 @@ class DownloadService : IntentService("DownloadService") {
                             fileName,
                             file.absolutePath,
                             url,
-                            File(file, "$fileName.pdf").length(),
                             System.currentTimeMillis()
                         )
                     )
@@ -53,7 +52,7 @@ class DownloadService : IntentService("DownloadService") {
                 DOWNLOAD_MODE_MULTI -> {
                     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
                     val downloadInfos: List<DownloadInfo> =
-                        intent.getParcelableArrayListExtra(DownloadService.DOWNLOAD_INFOS)
+                        intent.getParcelableArrayListExtra(DOWNLOAD_INFOS)
                     val channel = extractor.extractMulti(downloadInfos, file!!)
 //                    val channel = if (regex.isNullOrEmpty()) {
 //                        val downloadInfos = extractor.extractDownloadInfos(url)
@@ -67,7 +66,6 @@ class DownloadService : IntentService("DownloadService") {
                                 pair.second, //file name
                                 file.absolutePath,
                                 pair.first, // url of download
-                                File(file, "${pair.second}.pdf").length(),
                                 System.currentTimeMillis()
                             )
                         )

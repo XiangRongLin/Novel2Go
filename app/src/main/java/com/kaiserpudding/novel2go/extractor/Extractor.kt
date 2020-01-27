@@ -2,7 +2,7 @@ package com.kaiserpudding.novel2go.extractor
 
 import android.util.Log
 import com.kaiserpudding.novel2go.BuildConfig.DEBUG
-import com.kaiserpudding.novel2go.download.DownloadInfo
+import com.kaiserpudding.novel2go.model.DownloadInfo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -84,7 +84,14 @@ class Extractor {
                     && it.text().contains(regex)
                     && chapterUrl != "/"
             if (chapterUrl.startsWith("/")) chapterUrl = url.protocol + "://" + url.host + chapterUrl
-            result.add(DownloadInfo(chapterUrl, name, isChapter))
+            result.add(
+                DownloadInfo(
+                    chapterUrl,
+                    name,
+                    isChapter,
+                    link
+                )
+            )
         }
         return result
     }

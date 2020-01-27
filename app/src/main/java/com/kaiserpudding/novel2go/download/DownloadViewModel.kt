@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.kaiserpudding.novel2go.database.AppDatabase
 import com.kaiserpudding.novel2go.extractor.Extractor
 import com.kaiserpudding.novel2go.model.Download
+import com.kaiserpudding.novel2go.model.DownloadInfo
+import com.kaiserpudding.novel2go.repositories.DownloadInfoRepository
 import com.kaiserpudding.novel2go.repositories.DownloadRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,18 +18,21 @@ import java.io.File
 
 class DownloadViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: DownloadRepository =
+    private val downloadRepository: DownloadRepository =
         DownloadRepository(AppDatabase.getDatabase(application).downloadDao())
+    private val downloadInfoRepository: DownloadInfoRepository by lazy {
+        DownloadInfoRepository(AppDatabase.getDatabase(application).downloadInfoDao())
+    }
     private val extractor by lazy { Extractor() }
     val allDownloads: LiveData<List<Download>>
-        get() = repository.getAll()
+        get() = downloadRepository.getAll()
 
     fun insert(download: Download) = viewModelScope.launch {
-        repository.insert(download)
+        downloadRepository.insert(download)
     }
 
     fun delete(downloads: LongArray) = viewModelScope.launch {
-        repository.delete(downloads)
+        downloadRepository.delete(downloads)
     }
 
     fun extractChaptersFromUrl(url: String, regex: String = ""): LiveData<List<DownloadInfo>> {
@@ -45,6 +50,12 @@ class DownloadViewModel(application: Application) : AndroidViewModel(application
         return result
     }
 
+    /**
+     * TODO Move to service
+     *
+     * @param downloadInfos
+     * @param file
+     */
     fun download(downloadInfos: List<DownloadInfo>, file: File) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -54,10 +65,15 @@ class DownloadViewModel(application: Application) : AndroidViewModel(application
                         pair.second,
                         file.absolutePath,
                         pair.first,
-                        File(file, "${pair.second}.pdf").length(),
                         System.currentTimeMillis()
                     ))
                 }
+            }
+        }
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                downloadInfoRepository.insert(downloadInfos)
             }
         }
     }

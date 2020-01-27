@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import com.kaiserpudding.novel2go.R
+import com.kaiserpudding.novel2go.model.DownloadInfo
 
 
 import kotlinx.android.synthetic.main.list_item_select_download.view.*
