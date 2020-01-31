@@ -3,6 +3,7 @@ package com.kaiserpudding.novel2go.download
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -20,6 +21,7 @@ import com.kaiserpudding.novel2go.R
 import com.kaiserpudding.novel2go.model.Download
 import com.kaiserpudding.novel2go.util.multiSelect.MultiSelectFragment
 import com.kaiserpudding.novel2go.util.setSafeOnClickListener
+import kotlin.collections.ArrayList
 
 /**
  * A fragment representing a list of Items.
@@ -41,6 +43,11 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
             override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
                 Log.d(LOG_TAG, "Action item clicked with mode $mode and item $item")
                 return when (item.itemId) {
+                    R.id.action_send_to_kindle -> {
+                        if (DEBUG) Log.d(LOG_TAG, "Action item 'send to kindle' clicked")
+                        startEmailIntent(adapter.selectedPosition)
+                        true
+                    }
                     R.id.action_delete -> {
                         if (DEBUG) Log.d(LOG_TAG, "Action item 'delete' clicked")
                         downloadViewModel.delete(adapter.selectedIdArray)
@@ -99,7 +106,7 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
                 }
                 R.id.send_to_kindle -> {
                     Log.d(LOG_TAG, "Send email clicked")
-                    startEmailIntent(position)
+                    startEmailIntent(intArrayOf(position))
                     true
                 }
                 R.id.open_with -> {
@@ -126,20 +133,37 @@ class DownloadFragment : MultiSelectFragment<Download, DownloadAdapter>(),
         startActivity(Intent.createChooser(intent, "Share via"))
     }
 
-    private fun startEmailIntent(position: Int) {
+    private fun startEmailIntent(positions: IntArray) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val email = prefs.getString("kindle_email", "")
         if (!email.isNullOrEmpty()) {
-            val intent = Intent(Intent.ACTION_SEND)
+            val intent: Intent
+            if (positions.size == 1) {
+                intent = Intent(Intent.ACTION_SEND)
+                val uri = FileProvider.getUriForFile(
+                    context!!,
+                    "$APPLICATION_ID.fileprovider",
+                    adapter.list[positions[0]].file
+                )
+                intent.putExtra(Intent.EXTRA_STREAM, uri)
+            } else {
+                intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+                val uris = ArrayList<Uri>()
+                positions.forEach { position ->
+                    uris.add(
+                        FileProvider.getUriForFile(
+                            context!!,
+                            "$APPLICATION_ID.fileprovider",
+                            adapter.list[position].file
+                        )
+                    )
+                }
+                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+            }
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
             val useConvert = prefs.getBoolean("use_amazon_convert", true)
             if (useConvert) intent.putExtra(Intent.EXTRA_SUBJECT, "convert")
-            val uri = FileProvider.getUriForFile(
-                context!!,
-                "$APPLICATION_ID.fileprovider",
-                adapter.list[position].file
-            )
-            intent.putExtra(Intent.EXTRA_STREAM, uri)
+
             intent.type = "message/rfc822"
             startActivity(Intent.createChooser(intent, "send mail"))
         }

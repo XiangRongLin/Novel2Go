@@ -20,9 +20,12 @@ abstract class MultiSelectAdapter<T>(
     val selectedIdArray: LongArray
         get() = selectedIdSet.toLongArray()
     val numberOfSelected: Int
-        get() = selectedIdArray.size
+        get() = selectedPosition.size
     val inSelectionMode: Boolean
         get() = numberOfSelected > 0
+    private val selectedPositionSet = mutableSetOf<Int>()
+    val selectedPosition : IntArray
+        get() = selectedPositionSet.toIntArray()
 
     /**
      * The id of the layout that is representing a single item in the recycler view
@@ -47,6 +50,9 @@ abstract class MultiSelectAdapter<T>(
      * @param position
      */
     fun toggleSelectedThenNotify(position: Int) {
+        if (selectedPositionSet.contains(position)) selectedPositionSet.remove(position)
+        else selectedPositionSet.add(position)
+
         val id = getItemId(position)
         if (selectedIdSet.contains(id)) selectedIdSet.remove(id)
         else selectedIdSet.add(id)
@@ -59,6 +65,7 @@ abstract class MultiSelectAdapter<T>(
      *
      */
     fun clearSelectedThenNotify() {
+        selectedPositionSet.clear()
         selectedIdSet.clear()
         notifyDataSetChanged()
     }
