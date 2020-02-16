@@ -34,23 +34,10 @@
         android:text="Table of Contents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/edit_text_regex"
+        app:layout_constraintBottom_toTopOf="@+id/button_start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
-
-    <EditText
-        android:id="@+id/edit_text_regex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_input_field"
-        android:layout_marginEnd="@dimen/margin_input_field"
-        android:hint="Regex to filter links"
-        android:inputType="textFilter"
-        app:layout_constraintBottom_toTopOf="@id/button_start"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/checkbox_toc_download" />
 
     <Button
         android:id="@+id/button_start"
@@ -62,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_regex" />
+        app:layout_constraintTop_toBottomOf="@+id/checkbox_toc_download" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"

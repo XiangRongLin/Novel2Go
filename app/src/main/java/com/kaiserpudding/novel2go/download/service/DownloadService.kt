@@ -85,7 +85,6 @@ class DownloadService : IntentService("DownloadService") {
         private const val LOG_TAG = "DownloadService"
         const val DOWNLOAD_URL_INTENT_EXTRA = "download_url"
         const val STORAGE_PERMISSION_INTENT_EXTRA = "external_storage_persmisison"
-        const val DOWNLOAD_REGEX_INTENT_EXTRA = "download_regex"
         const val DOWNLOAD_MODE_INTENT_EXTRA = "donwload_mode"
         const val DOWNLOAD_MODE_SINGLE = "download_mode_single"
         const val DOWNLOAD_MODE_MULTI = "download_mode_multi"

@@ -48,7 +48,6 @@ class NewDownloadFragment : Fragment() {
                 listener!!.toSelectDownloads(url)
             } else {
 
-                val tocRegex = edit_text_regex.text.toString()
                 val storagePermission = ContextCompat.checkSelfPermission(
                     context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_DENIED
@@ -61,7 +60,6 @@ class NewDownloadFragment : Fragment() {
                             DownloadService.DOWNLOAD_MODE_INTENT_EXTRA,
                             DownloadService.DOWNLOAD_MODE_MULTI
                         )
-                        it.putExtra(DownloadService.DOWNLOAD_REGEX_INTENT_EXTRA, tocRegex)
                     } else {
                         it.putExtra(
                             DownloadService.STORAGE_PERMISSION_INTENT_EXTRA,
