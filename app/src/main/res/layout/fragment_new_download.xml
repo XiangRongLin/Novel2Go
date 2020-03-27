@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_input_field"
         android:layout_marginEnd="@dimen/margin_input_field"
-        android:hint="https://www.youtube.com/watch?v=YthChN1Wq8M"
         android:inputType="textUri"
         app:layout_constraintBottom_toTopOf="@id/checkbox_toc_download"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,10 +33,31 @@
         android:text="Table of Contents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/button_start"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_wait_between_requests"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_url" />
+
+    <TextView
+        android:id="@+id/text_view_wait_between_requests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wait time between request in seconds"
+
+        app:layout_constraintBottom_toTopOf="@id/edit_text_wait_between_requests"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_toc_download"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/edit_text_wait_between_requests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="Default 5 seconds"
+        android:layout_marginHorizontal="@dimen/margin_input_field"
+        app:layout_constraintTop_toBottomOf="@id/text_view_wait_between_requests"
+        app:layout_constraintBottom_toTopOf="@id/button_start"/>
 
     <Button
         android:id="@+id/button_start"
@@ -49,7 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkbox_toc_download" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_wait_between_requests" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"

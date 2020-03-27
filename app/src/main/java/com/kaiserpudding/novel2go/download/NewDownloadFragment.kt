@@ -45,7 +45,9 @@ class NewDownloadFragment : Fragment() {
             val isTOCDownload = checkbox_toc_download.isChecked
 
             if (isTOCDownload) {
-                listener!!.toSelectDownloads(url)
+                val input = edit_text_wait_between_requests.text
+                val waitTime = if (input.isBlank()) 5 else Integer.parseInt(input.toString())
+                listener!!.toSelectDownloads(url, waitTime)
             } else {
 
                 val storagePermission = ContextCompat.checkSelfPermission(
@@ -125,6 +127,6 @@ class NewDownloadFragment : Fragment() {
      */
     interface OnDownloadInteractionListener {
         fun onStartDownload()
-        fun toSelectDownloads(url: String)
+        fun toSelectDownloads(url: String, waitTime: Int)
     }
 }

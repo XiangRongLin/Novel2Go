@@ -39,5 +39,9 @@
         <argument
             android:name="url"
             app:argType="string" />
+        <argument
+            android:name="waitTime"
+            app:argType="integer"
+            android:defaultValue="5" />
     </fragment>
 </navigation>

@@ -55,9 +55,9 @@ class MainActivity : AppCompatActivity(),
         )
     }
 
-    override fun toSelectDownloads(url: String) {
+    override fun toSelectDownloads(url: String, waitTime: Int) {
         navController.navigate(
-            NewDownloadFragmentDirections.actionFragmentDownloadToSelectDownloadFragment(url)
+            NewDownloadFragmentDirections.actionFragmentDownloadToSelectDownloadFragment(url, waitTime)
         )
     }
 

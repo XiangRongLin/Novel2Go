@@ -56,10 +56,10 @@ class DownloadViewModel(application: Application) : AndroidViewModel(application
      * @param downloadInfos
      * @param file
      */
-    fun download(downloadInfos: List<DownloadInfo>, file: File) {
+    fun download(downloadInfos: List<DownloadInfo>, file: File, waitTime: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val channel = extractor.extractMulti(downloadInfos, file)
+                val channel = extractor.extractMulti(downloadInfos, file, waitTime)
                 for (pair in channel) {
                     insert(Download(
                         pair.second,

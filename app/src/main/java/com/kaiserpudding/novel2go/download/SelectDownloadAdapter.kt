@@ -34,7 +34,7 @@ class SelectDownloadAdapter : RecyclerView.Adapter<SelectDownloadAdapter.ViewHol
             view.setOnClickListener {
                 val checkBox = it.findViewById<CheckBox>(R.id.download_is_chapter)
                 checkBox.toggle()
-                downloadInfos[position].isChapter = checkBox.isSelected
+                downloadInfos[position].isChapter = checkBox.isChecked
             }
         }
     }

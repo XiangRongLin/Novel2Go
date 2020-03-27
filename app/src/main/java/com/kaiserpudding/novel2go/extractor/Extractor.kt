@@ -1,6 +1,7 @@
 package com.kaiserpudding.novel2go.extractor
 
 import android.util.Log
+import android.util.TimeUtils
 import com.kaiserpudding.novel2go.BuildConfig.DEBUG
 import com.kaiserpudding.novel2go.model.DownloadInfo
 import kotlinx.coroutines.GlobalScope
@@ -39,7 +40,8 @@ class Extractor {
      */
     suspend fun extractMulti(
         downloadInfos: List<DownloadInfo>,
-        file: File
+        file: File,
+        waitTime: Int = 5
     ): Channel<Pair<String, String>> {
         if (DEBUG) Log.d(LOG_TAG, "extractMulti() called")
         val channel = Channel<Pair<String, String>>()
@@ -51,7 +53,7 @@ class Extractor {
                     LOG_TAG,
                     "extractMulti() channel sent url: ${it.url}, file name: $fileName"
                 )
-                delay(5000)
+                delay(waitTime * 1000L)
             }
             channel.close()
             if (DEBUG) Log.d(LOG_TAG, "extractMulti() channel closed")

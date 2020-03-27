@@ -28,6 +28,7 @@ class SelectDownloadFragment : Fragment() {
 
     private var listener: OnListFragmentInteractionListener? = null
     private lateinit var url: String
+    private var waitTime: Int = 5
     private lateinit var downloadViewModel: DownloadViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +36,7 @@ class SelectDownloadFragment : Fragment() {
 
         val safeArgs: SelectDownloadFragmentArgs by navArgs()
         url = safeArgs.url
+        waitTime = safeArgs.waitTime
 
         downloadViewModel = ViewModelProviders.of(activity!!).get(DownloadViewModel::class.java)
     }
@@ -53,7 +55,7 @@ class SelectDownloadFragment : Fragment() {
         val finish: Button = view.findViewById(R.id.button_select_finish)
         finish.setOnClickListener {
 
-            downloadViewModel.download(adapter.getSelected(), getStorageFile())
+            downloadViewModel.download(adapter.getSelected(), getStorageFile(), waitTime)
             listener!!.onSelectFinish()
         }
 
